@@ -6,9 +6,6 @@ AllCops:
 Rails:
   Enabled: true
 
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 Layout/LineLength:
   Max: 120
 
