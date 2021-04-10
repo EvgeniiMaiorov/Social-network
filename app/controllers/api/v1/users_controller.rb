@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class UsersController < Api::ApplicationController
+    class UsersController < Api::V1::ApplicationController
       before_action :find_user, only: %i[show update destroy]
 
       def index

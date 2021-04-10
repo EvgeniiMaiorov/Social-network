@@ -3,9 +3,9 @@
 Rails.application.routes.draw do
   root 'pages#index'
 
-  namespace :api do
+  namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      resources :users
+      resources :users, exclude: %i[new edit]
     end
   end
 
