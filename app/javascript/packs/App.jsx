@@ -7,7 +7,7 @@ import ReactDOM from 'react-dom'
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <div>Hello, social network!</div>,
+    <h1>Hello, social network!</h1>,
     document.body.appendChild(document.createElement('div')),
   )
 })
