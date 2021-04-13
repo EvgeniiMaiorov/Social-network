@@ -4,10 +4,24 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import MainPage from './components/MainPage'
+import styled, {createGlobalStyle} from 'styled-components'
+
+const Global = createGlobalStyle`
+html, body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #E5E5E5;
+}
+`
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <h1>Hello, social network!</h1>,
-    document.body.appendChild(document.createElement('div')),
+    <>
+    <MainPage />
+    <Global />
+    </>,
+    document.body.appendChild(document.createElement('div'))
   )
 })
