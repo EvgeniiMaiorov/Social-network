@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
-import { Formik, Form, ErrorMessage } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
 
 const MainPage = () => {
@@ -43,32 +43,28 @@ const MainPage = () => {
               validate={validateValues}
               onSubmit={onSubmit}
             >
-              {({ isSubmitting, values, handleChange }) => (
+              {({ isSubmitting, values, handleChange, errors }) => (
                 <Form>
                   <Row>
-                    <LoginInput
-                      label="Email"
+                    <Field
+                      className={errors.login ? 'invalid' : 'valid'}
                       name="login"
-                      value={values.login}
-                      onChange={handleChange}
+                      label="Email"
+                      error={errors.login}
+                      as={LoginInput}
                       xl={12}
                     />
-                    <Col xl={12}>
-                      <ErrorMessage name="login" component={RedError} />
-                    </Col>
                   </Row>
                   <Row>
-                    <LoginInput
+                    <Field
+                      className={errors.password ? 'invalid' : 'valid'}
                       name="password"
-                      value={values.password}
-                      onChange={handleChange}
-                      xl={12}
                       label="Password"
+                      error={errors.password}
+                      as={LoginInput}
+                      xl={12}
                       password
                     />
-                    <Col xl={12}>
-                      <ErrorMessage name="password" component={RedError} />
-                    </Col>
                   </Row>
                   <LoginButton type="submit" disabled={isSubmitting}>Log in</LoginButton>
                 </Form>
@@ -141,10 +137,6 @@ const LoginButton = styled(Button)`
   }
   width: 100%;
   border-radius: 4px;
-`
-
-const RedError = styled.div`
-  color: red;
 `
 
 export default MainPage
