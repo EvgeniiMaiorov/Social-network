@@ -2,30 +2,28 @@ import React from 'react'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 
-const MainPage = () => {
-  return (
-    <PageContainer>
-      <Row>
-        <Col xl={5}>
-          <LoginFormWrapper>
-            <LogoTitle>
-              <img src="/logo.png" />
-              <Text>Welcom to LetsTalk!</Text>
-            </LogoTitle>
-            <LoginInput xl={12} placeholder="Login" />
-            <LoginInput xl={12} placeholder="Password" />
-            <LoginButton>Log in</LoginButton>
-          </LoginFormWrapper>
-        </Col>
-        <Col xl={7}>
-          <ImageWrapper>
-            <Image src="/rafiki2.png" />
-          </ImageWrapper>
-        </Col>
-      </Row>
-    </PageContainer>
-  )
-}
+const MainPage = () => (
+  <PageContainer>
+    <Row>
+      <Col xl={5}>
+        <LoginFormWrapper>
+          <LogoTitle>
+            <img src="/logo.png" alt="" />
+            <Text>Welcom to LetsTalk!</Text>
+          </LogoTitle>
+          <LoginInput xl={12} placeholder="Login" />
+          <LoginInput xl={12} placeholder="Password" />
+          <LoginButton>Log in</LoginButton>
+        </LoginFormWrapper>
+      </Col>
+      <Col xl={7}>
+        <ImageWrapper>
+          <Image src="/rafiki2.png" />
+        </ImageWrapper>
+      </Col>
+    </Row>
+  </PageContainer>
+)
 
 const PageContainer = styled(Container)`
   width: 100%;
