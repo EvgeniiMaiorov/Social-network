@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   root 'pages#index'
-
+  post '/auth', to: 'pages#auth'
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
       resources :users, exclude: %i[new edit]

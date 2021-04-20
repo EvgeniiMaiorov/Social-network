@@ -1,8 +1,34 @@
 import React from 'react'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
+import { Formik, Form, Field } from 'formik'
+import axios from 'axios'
 
 const MainPage = () => {
+  const onSubmit = (values, { setSubmitting }) => {
+    setSubmitting(true)
+    axios.post('/auth', values).then(response => {
+      setSubmitting(false)
+      console.log(response)
+    }).catch(error => {
+      setSubmitting(false)
+      console.log(error)
+    })
+  }
+
+  const validateValues = values => {
+    const errors = {}
+    if (!values.login) {
+      errors.login = 'Required'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.login)) {
+      errors.login = 'Invalid login address'
+    }
+    if (!values.password) {
+      errors.password = 'Required'
+    }
+    return errors
+  }
+
   return (
     <PageContainer>
       <Row>
@@ -12,9 +38,38 @@ const MainPage = () => {
               <img src="/logo.png" />
               <Text>Welcom to LetsTalk!</Text>
             </LogoTitle>
-            <LoginInput xl={12} placeholder="Login" />
-            <LoginInput xl={12} placeholder="Password" />
-            <LoginButton>Log in</LoginButton>
+            <Formik
+              initialValues={{ login: '', password: '' }}
+              validate={validateValues}
+              onSubmit={onSubmit}
+            >
+              {({ isSubmitting, values, handleChange, errors }) => (
+                <Form>
+                  <Row>
+                    <Field
+                      className={errors.login ? 'invalid' : 'valid'}
+                      name="login"
+                      label="Email"
+                      error={errors.login}
+                      as={LoginInput}
+                      xl={12}
+                    />
+                  </Row>
+                  <Row>
+                    <Field
+                      className={errors.password ? 'invalid' : 'valid'}
+                      name="password"
+                      label="Password"
+                      error={errors.password}
+                      as={LoginInput}
+                      xl={12}
+                      password
+                    />
+                  </Row>
+                  <LoginButton type="submit" disabled={isSubmitting}>Log in</LoginButton>
+                </Form>
+              )}
+            </Formik>
           </LoginFormWrapper>
         </Col>
         <Col xl={7}>
@@ -73,7 +128,6 @@ const LoginInput = styled(TextInput)`
   width: 100%;
   text-indent: 30px;
   height: 40px;
-  margin-bottom: 20px;
 `
 
 const LoginButton = styled(Button)`
