@@ -67,7 +67,7 @@ const SignUpLink = styled.div`
   width: 100%;
   height: 14px;
   left: 290px;
-  top: 575px;
+  top: 600px;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;

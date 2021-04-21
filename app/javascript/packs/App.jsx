@@ -1,9 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createGlobalStyle } from 'styled-components'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
-import MainPage from './components/MainPage'
-import SignUp from './components/SignUp'
+import MainRouter from './components/MainRouter'
 
 const Global = createGlobalStyle`
 html, body {
@@ -16,17 +14,10 @@ html, body {
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
-    <Router>
+    <>
       <Global />
-      <Switch>
-        <Route path="/sign-up">
-          <SignUp />
-        </Route>
-        <Route path="/">
-          <MainPage />
-        </Route>
-      </Switch>
-    </Router>,
+      <MainRouter />
+    </>,
     document.body.appendChild(document.createElement('div')),
   )
 })
