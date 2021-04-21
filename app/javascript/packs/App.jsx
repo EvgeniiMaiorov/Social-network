@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { createGlobalStyle } from 'styled-components'
-import MainPage from './components/MainPage'
+import MainRouter from './components/MainRouter'
 
 const Global = createGlobalStyle`
 html, body {
@@ -15,8 +15,8 @@ html, body {
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(
     <>
-      <MainPage />
       <Global />
+      <MainRouter />
     </>,
     document.body.appendChild(document.createElement('div')),
   )

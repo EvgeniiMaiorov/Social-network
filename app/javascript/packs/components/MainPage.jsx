@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -59,6 +60,19 @@ const LoginButton = styled(Button)`
   }
   width: 100%;
   border-radius: 4px;
+`
+
+const SignUpLink = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 14px;
+  left: 290px;
+  top: 600px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
 `
 
 const MainPage = () => {
@@ -124,6 +138,13 @@ const MainPage = () => {
                     />
                   </Row>
                   <LoginButton type="submit" disabled={isSubmitting}>Log in</LoginButton>
+                  <SignUpLink>
+                    <Col xl={12}>
+                      Not a member?
+                      {' '}
+                      <Link to="/sign-up">Sign up</Link>
+                    </Col>
+                  </SignUpLink>
                 </Form>
               )}
             </Formik>
