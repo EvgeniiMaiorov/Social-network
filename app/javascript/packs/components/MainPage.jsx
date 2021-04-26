@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -76,10 +76,15 @@ const SignUpLink = styled.div`
 `
 
 const MainPage = () => {
+  const history = useHistory();
+
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
-    axios.post('/auth', values).then((response) => {
+    console.log(values)
+    axios.post('/users/sign_in', { user: values }).then((response) => {
       setSubmitting(false)
+      localStorage.setItem('token', response.headers.authorization)
+      history.push(`/users/${response.data.id}`)
       console.log(response)
     }).catch((error) => {
       setSubmitting(false)
@@ -89,10 +94,10 @@ const MainPage = () => {
 
   const validateValues = (values) => {
     const errors = {}
-    if (!values.login) {
-      errors.login = 'Required'
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.login)) {
-      errors.login = 'Invalid login address'
+    if (!values.email) {
+      errors.email = 'Required'
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+      errors.email = 'Invalid email address'
     }
     if (!values.password) {
       errors.password = 'Required'
@@ -110,7 +115,7 @@ const MainPage = () => {
               <Text>Welcom to LetsTalk!</Text>
             </LogoTitle>
             <Formik
-              initialValues={{ login: '', password: '' }}
+              initialValues={{ email: '', password: '' }}
               validate={validateValues}
               onSubmit={onSubmit}
             >
@@ -118,10 +123,10 @@ const MainPage = () => {
                 <Form>
                   <Row>
                     <Field
-                      className={errors.login ? 'invalid' : 'valid'}
-                      name="login"
+                      className={errors.email ? 'invalid' : 'valid'}
+                      name="email"
                       label="Email"
-                      error={errors.login}
+                      error={errors.email}
                       as={LoginInput}
                       xl={12}
                     />

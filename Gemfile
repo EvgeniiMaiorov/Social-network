@@ -7,6 +7,8 @@ ruby '3.0.0'
 
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'carrierwave', '~> 2.0'
+gem 'devise'
+gem 'devise-jwt'
 gem 'jbuilder', '~> 2.7'
 gem 'jsonapi-serializer'
 gem 'pg'
