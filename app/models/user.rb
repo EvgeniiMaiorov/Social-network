@@ -9,5 +9,7 @@ class User < ApplicationRecord
 
   mount_uploader :photo_url, PhotoUploader
 
+  has_many :user_interests, dependent: :destroy
+  has_many :interests, through: :user_interests
   validates :first_name, :last_name, :email, presence: true
 end
