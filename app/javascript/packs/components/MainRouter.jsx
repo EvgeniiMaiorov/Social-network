@@ -6,7 +6,7 @@ import MainPage from './MainPage'
 const MainRouter = () => (
   <Router>
     <Switch>
-      <Route path="/sign-up">
+      <Route path="/users">
         <SignUp />
       </Route>
       <Route path="/">

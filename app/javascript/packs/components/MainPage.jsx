@@ -76,12 +76,12 @@ const SignUpLink = styled.div`
 `
 
 const MainPage = () => {
-  const history = useHistory();
+  const history = useHistory()
 
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     console.log(values)
-    axios.post('/users/sign_in', { user: values }).then((response) => {
+    axios.post('/users', { user: values }).then((response) => {
       setSubmitting(false)
       localStorage.setItem('token', response.headers.authorization)
       history.push(`/users/${response.data.id}`)
@@ -147,7 +147,7 @@ const MainPage = () => {
                     <Col xl={12}>
                       Not a member?
                       {' '}
-                      <Link to="/sign-up">Sign up</Link>
+                      <Link to="/users">Sign up</Link>
                     </Col>
                   </SignUpLink>
                 </Form>
