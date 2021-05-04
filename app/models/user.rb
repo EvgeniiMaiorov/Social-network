@@ -11,24 +11,11 @@ class User < ApplicationRecord
 
   has_many :user_interests, dependent: :destroy
   has_many :interests, through: :user_interests
-  has_many :invitations, dependent: :destroy
-  has_many :pending_invitations, lambda {
-                                   where confirmed: false
-                                 }, class_name: 'Invitation', foreign_key: 'friend_id', inverse_of: :user
+  has_many :own_invitations, class_name: 'Invitation', dependent: :destroy
+  has_many :received_invitations, class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy
+  has_many :pending_invitations, -> { pending }, class_name: 'Invitation'
+  has_many :accepted_invitations, -> { accepted }, class_name: 'Invitation'
+  has_many :rejected_invitations, -> { rejected }, class_name: 'Invitation'
+
   validates :first_name, :last_name, :email, presence: true
-
-  def friends
-    friends_i_sent_invitation = Invitation.where(user_id: id, confirmed: true).pluck(:friend_id)
-    friends_i_got_invitation = Invitation.where(friend_id: id, confirmed: true).pluck(:user_id)
-    ids = friends_i_sent_invitation + friends_i_got_invitation
-    User.where(id: ids)
-  end
-
-  def friend_with?(user)
-    Invitation.confirmed_record?(id, user.id)
-  end
-
-  def send_invitation(user)
-    invitations.create(friend_id: user.id)
-  end
 end

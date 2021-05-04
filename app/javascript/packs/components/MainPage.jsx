@@ -147,7 +147,7 @@ const MainPage = () => {
                     <Col xl={12}>
                       Not a member?
                       {' '}
-                      <Link to="/users">Sign up</Link>
+                      <Link to="/sign-up">Sign up</Link>
                     </Col>
                   </SignUpLink>
                 </Form>
