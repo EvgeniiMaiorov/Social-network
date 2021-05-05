@@ -10,14 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_30_120821) do
+ActiveRecord::Schema.define(version: 2021_05_03_133116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "interest_categories", force: :cascade do |t|
     t.string "category_name"
-    t.integer "interest_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["category_name"], name: "index_interest_categories_on_category_name", unique: true
@@ -25,16 +24,15 @@ ActiveRecord::Schema.define(version: 2021_04_30_120821) do
 
   create_table "interests", force: :cascade do |t|
     t.string "name"
-    t.integer "interest_category_id"
-    t.integer "user_id"
+    t.bigint "interest_category_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "invitations", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.integer "friend_id"
-    t.boolean "confirmed", default: false
+    t.bigint "friend_id", null: false
+    t.string "status", default: "pending", null: false
     t.index ["user_id"], name: "index_invitations_on_user_id"
   end
 
@@ -46,8 +44,8 @@ ActiveRecord::Schema.define(version: 2021_04_30_120821) do
   end
 
   create_table "user_interests", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "interest_id"
+    t.bigint "user_id", null: false
+    t.bigint "interest_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -68,10 +66,13 @@ ActiveRecord::Schema.define(version: 2021_04_30_120821) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
-    t.integer "interest_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "interests", "interest_categories"
   add_foreign_key "invitations", "users"
+  add_foreign_key "invitations", "users", column: "friend_id"
+  add_foreign_key "user_interests", "interests"
+  add_foreign_key "user_interests", "users"
 end
