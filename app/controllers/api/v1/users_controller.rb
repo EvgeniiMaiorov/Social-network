@@ -42,6 +42,10 @@ module Api
         end
       end
 
+      def user
+        render json: UserSerializer.new(current_user)
+      end
+
       private
 
       def user_params

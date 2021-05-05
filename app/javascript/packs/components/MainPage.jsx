@@ -81,7 +81,7 @@ const MainPage = () => {
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     console.log(values)
-    axios.post('/users', { user: values }).then((response) => {
+    axios.post('/users/sign_in', { user: values }).then((response) => {
       setSubmitting(false)
       localStorage.setItem('token', response.headers.authorization)
       history.push(`/users/${response.data.id}`)

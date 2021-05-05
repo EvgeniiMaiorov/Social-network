@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
       # resources :users, exclude: %i[new edit]
+      get :current_user, to: 'users#user'
       resources :invitations do
         member do
           patch :accept
