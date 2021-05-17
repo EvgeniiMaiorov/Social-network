@@ -5,6 +5,7 @@ import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
+import { checkPropTypes } from 'prop-types'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -83,33 +84,30 @@ const UploadPhotoText = styled.div`
   line-height: 19px;
 `
 
-const SignUp = () => {
+const SignUp = (props) => {
   const history = useHistory()
 
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
-    console.log(values)
     axios.post('/users', { user: values }).then((response) => {
+      props.loginHandler(response.headers.authorization)
       setSubmitting(false)
-      localStorage.setItem('token', response.headers.authorization)
-      history.push(`/users/${response.data.id}`)
-      console.log(response)
+      history.push('/interests')
     }).catch((error) => {
       setSubmitting(false)
-      console.log(error)
     })
   }
 
   const SignupSchema = Yup.object().shape({
     first_name: Yup.string()
       .matches(/^(?!admin\b)/i, 'Nice try!')
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
+      .min(2, 'Name is too short!')
+      .max(50, 'Name is too long!')
       .required('This field is required'),
     last_name: Yup.string()
       .matches(/^(?!admin\b)/i, 'Nice try!')
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
+      .min(2, 'Last name is too short!')
+      .max(50, 'Last name is too long!')
       .required('This field is required'),
     email: Yup.string().email('Invalid email').required('This field is required'),
     password: Yup.string()

@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    class InvitationsController < ActionController::API
+    class InvitationsController < Api::V1::ApplicationController
       before_action :find_user, only: %i[create index accept reject]
       before_action :find_friend, only: [:create]
 

@@ -75,7 +75,7 @@ const SignUpLink = styled.div`
   line-height: 14px;
 `
 
-const MainPage = () => {
+const MainPage = (props) => {
   const history = useHistory()
 
   const onSubmit = (values, { setSubmitting }) => {
@@ -84,6 +84,7 @@ const MainPage = () => {
     axios.post('/users/sign_in', { user: values }).then((response) => {
       setSubmitting(false)
       localStorage.setItem('token', response.headers.authorization)
+      props.setUserToken(response.headers.authorization)
       history.push(`/users/${response.data.id}`)
       console.log(response)
     }).catch((error) => {

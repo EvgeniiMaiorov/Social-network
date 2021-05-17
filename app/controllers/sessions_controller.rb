@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 class SessionsController < Devise::SessionsController
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: %i[create authenticate]
+  before_action :authenticate_user!, only: [:authenticate]
 
   respond_to :json
 
   def create
     super { |resource| @resource = resource }
+  end
+
+  def authenticate
+    render json: UserSerializer.new(current_user)
   end
 
   private
