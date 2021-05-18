@@ -6,7 +6,7 @@ module Api
       def index
         interests = Interest.all
 
-        render json: InterestSerializer.new(interests)
+        render json: interests
       end
     end
   end

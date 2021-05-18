@@ -11,7 +11,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def authenticate
-    render json: UserSerializer.new(current_user)
+    render json: current_user
   end
 
   private

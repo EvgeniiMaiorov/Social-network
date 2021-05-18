@@ -6,7 +6,7 @@ module Api
       def index
         interest_categories = InterestCategory.all
 
-        render json: InterestCategorySerializer.new(interest_categories, include: [:interests])
+        render json: interest_categories, include: [:interests]
       end
     end
   end
