@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-class InterestCategorySerializer
-  include FastJsonapi::ObjectSerializer
+class InterestCategorySerializer < ActiveModel::Serializer
+  attributes :id, :category_name
 
   has_many :interests
-
-  attributes :category_name
 end

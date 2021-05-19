@@ -63,10 +63,6 @@ const LogoTitle = styled.div`
 `
 
 const InterestsPage = () => {
-  const fetchCategories = () => {
-    console.log('111 :>> ', 111)
-  }
-
   const [interestCategories, setInterestCategories] = useState([])
 
   const [initialValues, setInitialValues] = useState({})
@@ -74,18 +70,10 @@ const InterestsPage = () => {
   const history = useHistory()
 
   useEffect(() => {
-    axios.get('/api/v1/interest_categories').then((response) => {
-      const categories = response.data.data.map((interestCategory) => {
-        const interests = interestCategory.relationships.interests.data.map((interest) => (
-          response.data.included.find((i) => (
-            interest.id === i.id && interest.type === i.type
-          ))
-        ))
-        interestCategory.relationships.interests.data = interests
-        return interestCategory
-      })
-      setInterestCategories(categories)
-      setInitialValues(categories.reduce((acc, interestCategory) => acc[interestCategory.id] = [], {}))
+    axios.get('/api/v1/interest_categories')
+    .then((response) => {
+      setInterestCategories(response.data.interest_categories)
+      setInitialValues(response.data.interest_categories.reduce((acc, interestCategory) => acc[interestCategory.id] = [], {}))
     })
   }, [])
 
@@ -116,7 +104,6 @@ const InterestsPage = () => {
               <img src="/logo.png" alt="" />
             </LogoTitle>
             <Text>Select your interests</Text>
-            { fetchCategories() }
             <Formik
               initialValues={initialValues}
               onSubmit={onSubmit}
@@ -127,9 +114,9 @@ const InterestsPage = () => {
                     { interestCategories?.map((ic) => (
                       <Col key={ic.id} xl={4}>
                         <Field as={Select} name={ic.id} multiple>
-                          <option value="" disabled>{ic.attributes.category_name}</option>
-                          {ic.relationships.interests.data.map((i) => (
-                            <option key={i.id} value={i.id}>{i.attributes.name}</option>
+                          <option value="" disabled>{ic.category_name}</option>
+                          {ic.interests.map((i) => (
+                            <option key={i.id} value={i.id}>{i.name}</option>
                           ))}
                         </Field>
                       </Col>

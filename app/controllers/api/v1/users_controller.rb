@@ -9,18 +9,18 @@ module Api
       def index
         users = User.all
 
-        render json: UserSerializer.new(users)
+        render json: users
       end
 
       def show
-        render json: UserSerializer.new(@user)
+        render json: @user
       end
 
       def create
         user = User.new(user_params)
 
         if user.save
-          render json: UserSerializer.new(user)
+          render json: user
         else
           render json: { error: user.errors.messages }, status: :unprocessable_entity
         end
@@ -28,7 +28,7 @@ module Api
 
       def update
         if @user.update(user_params)
-          render json: UserSerializer.new(@user)
+          render json: @user
         else
           render json: { error: @user.errors.messages }, status: :unprocessable_entity
         end
@@ -43,7 +43,7 @@ module Api
       end
 
       def user
-        render json: UserSerializer.new(current_user)
+        render json: current_user
       end
 
       private

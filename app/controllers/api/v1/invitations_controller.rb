@@ -9,14 +9,14 @@ module Api
       def index
         invitations = @user.invitations
 
-        render json: InvitationSerializer.new(invitations)
+        render json: invitations
       end
 
       def create
         invitation = @user.own_invitations.build(friend_id: @friend.id)
 
         if invitation.save
-          render json: InvitationSerializer.new(invitation)
+          render json: invitation
         else
           render json: { error: invitation.errors.messages }, status: :unprocessable_entity
         end
@@ -26,7 +26,7 @@ module Api
         invitation = @user.received_invitations.find(params[:id])
 
         if invitation.update(status: 'accepted')
-          render json: InvitationSerializer.new(invitation)
+          render json: invitation
         else
           render json: { error: invitation.errors.messages }, status: :unprocessable_entity
         end
@@ -36,7 +36,7 @@ module Api
         invitation = @user.received_invitations.find(params[:id])
 
         if invitation.update(status: 'rejected')
-          render json: InvitationSerializer.new(invitation)
+          render json: invitation
         else
           render json: { error: invitation.errors.messages }, status: :unprocessable_entity
         end

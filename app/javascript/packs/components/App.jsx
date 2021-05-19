@@ -27,7 +27,7 @@ const App = () => {
 
     axios.post('/users/authenticate', {}, { headers: { Authorization: userToken } } )
     .then((response) => {
-      setUserId(response.data.data.id)
+      setUserId(response.data.user.id)
       setLoading(false)
     }).catch((error) => {
       if (error.response.status === 401) {

@@ -5,12 +5,12 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.0'
 
+gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'carrierwave', '~> 2.0'
 gem 'devise'
 gem 'devise-jwt'
 gem 'jbuilder', '~> 2.7'
-gem 'jsonapi-serializer'
 gem 'pg'
 gem 'puma', '~> 4.1'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.5'
