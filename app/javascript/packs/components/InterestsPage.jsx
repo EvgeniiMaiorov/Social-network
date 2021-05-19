@@ -65,7 +65,7 @@ const LogoTitle = styled.div`
 const InterestsPage = () => {
   const [interestCategories, setInterestCategories] = useState([])
 
-  const [initialValues, setInitialValues] = useState({})
+  const [interestsByCategory, setInterestsByCategory] = useState({})
 
   const history = useHistory()
 
@@ -73,7 +73,7 @@ const InterestsPage = () => {
     axios.get('/api/v1/interest_categories')
     .then((response) => {
       setInterestCategories(response.data.interest_categories)
-      setInitialValues(response.data.interest_categories.reduce((acc, interestCategory) => acc[interestCategory.id] = [], {}))
+      setInterestsByCategory(response.data.interest_categories.reduce((acc, interestCategory) => acc[interestCategory.id] = [], {}))
     })
   }, [])
 
@@ -105,18 +105,18 @@ const InterestsPage = () => {
             </LogoTitle>
             <Text>Select your interests</Text>
             <Formik
-              initialValues={initialValues}
+              initialValues={interestsByCategory}
               onSubmit={onSubmit}
             >
               {({ isSubmitting }) => (
                 <Form>
                   <Row>
-                    { interestCategories?.map((ic) => (
-                      <Col key={ic.id} xl={4}>
-                        <Field as={Select} name={ic.id} multiple>
-                          <option value="" disabled>{ic.category_name}</option>
-                          {ic.interests.map((i) => (
-                            <option key={i.id} value={i.id}>{i.name}</option>
+                    { interestCategories?.map((interestCategory) => (
+                      <Col key={interestCategory.id} xl={4}>
+                        <Field as={Select} name={interestCategory.id} multiple>
+                          <option value="" disabled>{interestCategory.category_name}</option>
+                          {interestCategory.interests.map((interest) => (
+                            <option key={interest.id} value={interest.id}>{interest.name}</option>
                           ))}
                         </Field>
                       </Col>

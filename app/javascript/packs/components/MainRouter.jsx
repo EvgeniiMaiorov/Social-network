@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import SignUp from './SignUp'
-import MainPage from './MainPage'
+import LogInPage from './LogInPage'
 import InterestsPage from './InterestsPage'
 
 const MainRouter = (props) => {
@@ -19,7 +19,7 @@ const MainRouter = (props) => {
           <SignUp loginHandler={props.loginHandler} />
         </Route>
         <Route path="/">
-          { props.userId ? <Redirect to={`/users/${props.userId}`} /> : <MainPage userToken={props.userToken} /> }
+          { props.userId ? <Redirect to={`/users/${props.userId}`} /> : <LogInPage loginHandler={props.loginHandler} userToken={props.userToken} /> }
         </Route>
       </Switch>
     </Router>

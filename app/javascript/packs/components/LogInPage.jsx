@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -75,18 +75,14 @@ const SignUpLink = styled.div`
   line-height: 14px;
 `
 
-const MainPage = (props) => {
-  const history = useHistory()
-
+const LogInPage = (props) => {
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     console.log(values)
-    axios.post('/users/sign_in', { user: values }).then((response) => {
+    axios.post('/users/sign_in', { user: values })
+    .then((response) => {
       setSubmitting(false)
-      localStorage.setItem('token', response.headers.authorization)
-      props.setUserToken(response.headers.authorization)
-      history.push(`/users/${response.data.id}`)
-      console.log(response)
+      props.loginHandler(response.headers.authorization, response.data.user)
     }).catch((error) => {
       setSubmitting(false)
       console.log(error)
@@ -166,4 +162,4 @@ const MainPage = (props) => {
   )
 }
 
-export default MainPage
+export default LogInPage

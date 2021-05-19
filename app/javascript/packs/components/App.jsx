@@ -17,9 +17,10 @@ const App = () => {
   const [userToken, setUserToken] = useState(localStorage.getItem('token'))
   const [userId, setUserId] = useState(null)
   const [loading, setLoading] = useState(true)
-  const loginHandler = (token) => {
+  const loginHandler = (token, user) => {
     localStorage.setItem('token', token)
     setUserToken(token)
+    setUserId(user.id)
   }
 
   useEffect(() => {
@@ -38,7 +39,7 @@ const App = () => {
       }
       console.log(error.response.status)
     })
-  }, [userToken, userId])
+  }, [userToken])
 
   return (
     <>

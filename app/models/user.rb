@@ -18,8 +18,5 @@ class User < ApplicationRecord
   has_many :rejected_invitations, -> { rejected }, class_name: 'Invitation'
 
   validates :first_name, :last_name, :email, presence: true
-
-  def jwt_payload
-    { id: id }
-  end
+  validates :email, uniqueness: true
 end

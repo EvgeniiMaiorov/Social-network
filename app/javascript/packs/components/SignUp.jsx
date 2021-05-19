@@ -3,9 +3,7 @@ import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
-import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
-import { checkPropTypes } from 'prop-types'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -85,12 +83,10 @@ const UploadPhotoText = styled.div`
 `
 
 const SignUp = (props) => {
-  const history = useHistory()
-
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     axios.post('/users', { user: values }).then((response) => {
-      props.loginHandler(response.headers.authorization)
+      props.loginHandler(response.headers.authorization, response.data.user)
       setSubmitting(false)
       history.push('/interests')
     }).catch((error) => {
