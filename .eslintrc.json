@@ -21,7 +21,7 @@
         "semi": [2, "never"],
         "no-console": 0,
         "import/no-unresolved": [2, { "caseSensitive": false }],
-        "object-curly-newline": [2, { "consistent": true }]
-
+        "object-curly-newline": [2, { "consistent": true }],
+        "code": 120
     }
 }

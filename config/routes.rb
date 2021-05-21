@@ -2,11 +2,17 @@
 
 Rails.application.routes.draw do
   devise_for :users, controllers: { sessions: 'sessions', registrations: 'registrations' }, defaults: { format: :json }
+
   root 'pages#index'
+
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
       # resources :users, exclude: %i[new edit]
+
+      get :interests, to: 'interests#index'
       get :current_user, to: 'users#user'
+
+      resources :interest_categories
       resources :invitations do
         member do
           patch :accept

@@ -1,39 +1,25 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
-import axios from 'axios'
 import SignUp from './SignUp'
-import MainPage from './MainPage'
+import LogInPage from './LogInPage'
+import InterestsPage from './InterestsPage'
 
-const MainRouter = () => {
-  const [userToken] = useState(localStorage.getItem('token'))
-  const [userId, setUserId] = useState()
-
-  useEffect(() => {
-    if (!userToken) return
-
-    axios.get('/api/v1/current_user').then((response) => {
-      setUserId(response.data.data.id)
-    }).catch((error) => {
-      if (error.response.status === 401) {
-        localStorage.removeItem('token')
-        setUserId(null)
-      }
-      console.log(error.response.status)
-    })
-  }, [userToken])
-
+const MainRouter = (props) => {
   return (
     <Router>
-      {!userId ? <Redirect to="/" /> : null}
+      { !props.userToken && <Redirect to="/" /> }
       <Switch>
-        <Route path="/users/:userId">
+        <Route path="/interests">
+          <InterestsPage userToken={props.userToken} />
+        </Route>
+        <Route path="/users">
           <div>User</div>
         </Route>
         <Route path="/sign-up">
-          <SignUp />
+          <SignUp loginHandler={props.loginHandler} />
         </Route>
         <Route path="/">
-          {userId ? <Redirect to={`/users/${userId}`} /> : <MainPage /> }
+          { props.userToken ? <Redirect to="/users" /> : <LogInPage loginHandler={props.loginHandler} userToken={props.userToken} /> }
         </Route>
       </Switch>
     </Router>
