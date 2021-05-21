@@ -9,10 +9,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       # resources :users, exclude: %i[new edit]
 
-      get :interests, to: 'interests#index'
       get :current_user, to: 'users#user'
 
+      resources :user_interests, only: [:create]
       resources :interest_categories
+      resources :interests, only: [:index]
       resources :invitations do
         member do
           patch :accept
