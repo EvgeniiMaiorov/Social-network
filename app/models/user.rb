@@ -7,6 +7,8 @@ class User < ApplicationRecord
          :jwt_authenticatable,
          jwt_revocation_strategy: JwtDenylist
 
+  self.skip_session_storage = %i[http_auth params_auth]
+
   mount_uploader :photo_url, PhotoUploader
 
   has_many :user_interests, dependent: :destroy

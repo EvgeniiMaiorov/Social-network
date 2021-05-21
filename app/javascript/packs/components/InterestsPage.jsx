@@ -62,7 +62,7 @@ const LogoTitle = styled.div`
   padding-top: 60px;
 `
 
-const InterestsPage = () => {
+const InterestsPage = (props) => {
   const [interestCategories, setInterestCategories] = useState([])
 
   const [interestsByCategory, setInterestsByCategory] = useState({})
@@ -70,7 +70,7 @@ const InterestsPage = () => {
   const history = useHistory()
 
   useEffect(() => {
-    axios.get('/api/v1/interest_categories')
+    axios.get('/api/v1/interest_categories', { headers: { Authorization: props.userToken } })
     .then((response) => {
       setInterestCategories(response.data.interest_categories)
       setInterestsByCategory(response.data.interest_categories.reduce((acc, interestCategory) => acc[interestCategory.id] = [], {}))
@@ -80,13 +80,12 @@ const InterestsPage = () => {
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     const interestsIds = Object.keys(values).reduce((acc, key) => [...acc, ...values[key]], [])
-    axios.post('/api/v1/users/interests', { interestsIds })
+    axios.post('/api/v1/users/interests', { interestsIds }, { headers: { Authorization: props.userToken } })
       .then((response) => {
         setSubmitting(false)
-        history.push(`/users/${props.userId}`)
+        history.push('/users')
       }).catch((error) => {
         setSubmitting(false)
-        console.log(error)
       })
   }
 

@@ -4,7 +4,7 @@ module Api
   module V1
     class InterestCategoriesController < Api::V1::ApplicationController
       def index
-        interest_categories = InterestCategory.all
+        interest_categories = InterestCategory.all.preload(:interests)
 
         render json: interest_categories, include: [:interests]
       end

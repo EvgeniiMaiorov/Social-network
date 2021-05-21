@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
@@ -83,6 +84,8 @@ const UploadPhotoText = styled.div`
 `
 
 const SignUp = (props) => {
+  const history = useHistory()
+
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     axios.post('/users', { user: values }).then((response) => {

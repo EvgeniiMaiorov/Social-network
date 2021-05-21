@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { Preloader } from 'react-materialize'
-import axios from 'axios'
+import React, { useState } from 'react'
 import { createGlobalStyle } from 'styled-components'
 import MainRouter from './MainRouter'
 
@@ -15,36 +13,15 @@ html, body {
 
 const App = () => {
   const [userToken, setUserToken] = useState(localStorage.getItem('token'))
-  const [userId, setUserId] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const loginHandler = (token, user) => {
+  const loginHandler = (token) => {
     localStorage.setItem('token', token)
     setUserToken(token)
-    setUserId(user.id)
   }
-
-  useEffect(() => {
-    if (!userToken) return setLoading(false)
-
-    axios.post('/users/authenticate', {}, { headers: { Authorization: userToken } } )
-    .then((response) => {
-      setUserId(response.data.user.id)
-      setLoading(false)
-    }).catch((error) => {
-      if (error.response.status === 401) {
-        localStorage.removeItem('token')
-        setUserId(null)
-        setUserToken(null)
-        setLoading(false)
-      }
-      console.log(error.response.status)
-    })
-  }, [userToken])
 
   return (
     <>
       <Global />
-      { loading ?  <Preloader /> : <MainRouter loginHandler={loginHandler} userToken={userToken} userId={userId} /> }
+      <MainRouter loginHandler={loginHandler} userToken={userToken} />
     </>
   )
 }

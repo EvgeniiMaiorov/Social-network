@@ -78,14 +78,12 @@ const SignUpLink = styled.div`
 const LogInPage = (props) => {
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
-    console.log(values)
     axios.post('/users/sign_in', { user: values })
     .then((response) => {
       setSubmitting(false)
       props.loginHandler(response.headers.authorization, response.data.user)
     }).catch((error) => {
       setSubmitting(false)
-      console.log(error)
     })
   }
 

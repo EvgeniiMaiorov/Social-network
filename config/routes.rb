@@ -1,13 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users, controllers: { sessions: 'sessions', registrations: 'registrations' }, defaults: { format: :json } do
-    get 'authenticate', to: 'devise/sessions#authenticate'
-  end
-
-  devise_scope :user do
-    post '/users/authenticate', to: 'sessions#authenticate'
-  end
+  devise_for :users, controllers: { sessions: 'sessions', registrations: 'registrations' }, defaults: { format: :json }
 
   root 'pages#index'
 

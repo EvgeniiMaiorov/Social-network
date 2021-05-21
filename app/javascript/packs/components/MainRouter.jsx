@@ -7,19 +7,19 @@ import InterestsPage from './InterestsPage'
 const MainRouter = (props) => {
   return (
     <Router>
-      { !props.userId && <Redirect to="/" /> }
+      { !props.userToken && <Redirect to="/" /> }
       <Switch>
         <Route path="/interests">
-          <InterestsPage userToken={props.userToken} userId={props.userId} />
+          <InterestsPage userToken={props.userToken} />
         </Route>
-        <Route path="/users/:userId">
+        <Route path="/users">
           <div>User</div>
         </Route>
         <Route path="/sign-up">
           <SignUp loginHandler={props.loginHandler} />
         </Route>
         <Route path="/">
-          { props.userId ? <Redirect to={`/users/${props.userId}`} /> : <LogInPage loginHandler={props.loginHandler} userToken={props.userToken} /> }
+          { props.userToken ? <Redirect to="/users" /> : <LogInPage loginHandler={props.loginHandler} userToken={props.userToken} /> }
         </Route>
       </Switch>
     </Router>
