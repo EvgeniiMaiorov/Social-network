@@ -34,16 +34,18 @@ module Api
         end
       end
 
+      def update_user_interests
+        current_user.interest_ids = Interest.where(id: params[:interest_ids]).pluck(:id)
+
+        head :ok
+      end
+
       def destroy
         if @user.destroy
           head :no_content
         else
           render json: { error: @user.errors.messages }, status: :unprocessable_entity
         end
-      end
-
-      def user
-        render json: current_user
       end
 
       private

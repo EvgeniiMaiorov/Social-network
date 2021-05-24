@@ -64,9 +64,9 @@ const LogoTitle = styled.div`
 
 const InterestsPage = (props) => {
   const [interestCategories, setInterestCategories] = useState([])
-  const [userInterests, setUserInterests] = useState([])
+  const [userInterests, setUserInterests] = useState()
   const [interestsByCategory, setInterestsByCategory] = useState({})
-  const [laoding, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true)
   const history = useHistory()
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const InterestsPage = (props) => {
   }, [])
 
   useEffect(() => {
-    if (interestCategories.length === 0 || userInterests.length === 0) return
+    if (interestCategories.length === 0 || !userInterests) return
 
     const userInterestIdsByCategory = (interestCategoryId) => {
       const userInterestsIds = userInterests
@@ -102,7 +102,7 @@ const InterestsPage = (props) => {
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     const interestsIds = Object.keys(values).reduce((acc, key) => [...acc, ...values[key]], [])
-    axios.post('/api/v1/user_interests', { interest_ids: interestsIds }, { headers: { Authorization: props.userToken } })
+    axios.patch('/api/v1/users/update_user_interests', { interest_ids: interestsIds }, { headers: { Authorization: props.userToken } })
       .then((response) => {
         setSubmitting(false)
         history.push('/users')
@@ -125,17 +125,17 @@ const InterestsPage = (props) => {
               <img src="/logo.png" alt="" />
             </LogoTitle>
             <Text>Select your interests</Text>
-            { !laoding && (
+            { !loading && (
               <Formik
                 initialValues={interestsByCategory}
                 onSubmit={onSubmit}
               >
-                {({ isSubmitting, values }) => (
+                {({ isSubmitting }) => (
                   <Form>
                     <Row>
                       { interestCategories?.map((interestCategory) => (
                         <Col key={interestCategory.id} xl={4}>
-                          <Field as={Select} name={interestCategory.category_name} value={values[interestCategory.category_name]} multiple>
+                          <Field as={Select} name={interestCategory.category_name} multiple>
                             <option value="" disabled>{interestCategory.category_name}</option>
                             {interestCategory.interests.map((interest) => (
                               <option key={interest.id} value={interest.id}>{interest.name}</option>
