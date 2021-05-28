@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
@@ -38,10 +38,9 @@ const Image = styled.img`
 
 const UploadPhoto = styled.div`
   position: absolute;
-  width: 141px;
-  height: 141px;
-  left: 160px;
+  left: 135px;
   top: 175px;
+  cursor: pointer;
 `
 
 const Text = styled.div`
@@ -76,19 +75,32 @@ const UploadPhotoText = styled.div`
   height: 19px;
   left: 175px;
   top: 325px;
+  left: 165px;
+  top: 355px;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
   line-height: 19px;
+  cursor: pointer;
 `
+
+const signUpInitialValues = { first_name: '', last_name: '', email: '', password: '', password_confirmation: '', photo: '' }
 
 const SignUp = (props) => {
   const history = useHistory()
 
+  const inputFile = useRef(null)
+
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
-    axios.post('/users', { user: values }).then((response) => {
+    const formData = new FormData()
+    formData.append('user[first_name]', values.first_name)
+    formData.append('user[last_name]', values.last_name)
+    formData.append('user[email]', values.email)
+    formData.append('user[password]', values.password)
+    formData.append('user[photo]', values.photo)
+    axios.post('/users', formData).then((response) => {
       props.loginHandler(response.headers.authorization, response.data.user)
       setSubmitting(false)
       history.push('/interests')
@@ -97,7 +109,17 @@ const SignUp = (props) => {
     })
   }
 
-  const SignupSchema = Yup.object().shape({
+  const onClick = () => {
+    inputFile.current.click()
+  }
+
+  const onPhotoChange = (setFieldValue) => {
+    return (event) => {
+      setFieldValue("photo", event.currentTarget.files[0])
+    }
+  }
+
+  const signUpSchema = Yup.object().shape({
     first_name: Yup.string()
       .matches(/^(?!admin\b)/i, 'Nice try!')
       .min(2, 'Name is too short!')
@@ -134,19 +156,27 @@ const SignUp = (props) => {
             <Row>
               <Text>Create new account</Text>
             </Row>
-            <UploadPhoto>
-              <img src="/placeholder.png" alt="" />
-            </UploadPhoto>
-            <Col xl={12}>
-              <UploadPhotoText>Upload photo</UploadPhotoText>
-            </Col>
             <Formik
-              initialValues={{ first_name: '', last_name: '', email: '', password: '', password_confirmation: '' }}
+              initialValues={signUpInitialValues}
               onSubmit={onSubmit}
-              validationSchema={SignupSchema}
+              validationSchema={signUpSchema}
             >
-              {({ isSubmitting, errors, touched }) => (
+              {({ isSubmitting, errors, touched, setFieldValue, values }) => (
                 <Form>
+                  <UploadPhoto>
+                    <img
+                      className="circle responseve-img"
+                      onClick={onClick}
+                      src={ values.photo ? URL.createObjectURL(values.photo) : '/placeholder.png' }
+                      alt=""
+                      width="160"
+                      height="160"
+                    />
+                  </UploadPhoto>
+                  <Col xl={12}>
+                    <UploadPhotoText onClick={onClick}>Upload photo</UploadPhotoText>
+                  </Col>
+                  <input accept="image/*" type='file' name='photo' ref={inputFile} style={{display: 'none'}} onChange={onPhotoChange(setFieldValue)} />
                   <Row>
                     <Col offset="s6">
                       <Field
