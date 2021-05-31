@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createGlobalStyle } from 'styled-components'
 import MainRouter from './MainRouter'
 
@@ -12,11 +12,19 @@ html, body {
 `
 
 const App = () => {
+  const urlParams = new URLSearchParams(window.location.search)
   const [userToken, setUserToken] = useState(localStorage.getItem('token'))
+
   const loginHandler = (token) => {
     localStorage.setItem('token', token)
     setUserToken(token)
   }
+
+  useEffect( () => {
+    const token = urlParams.get('token')
+
+    if (token) loginHandler(token)
+  }, [])
 
   return (
     <>

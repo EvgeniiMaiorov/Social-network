@@ -102,3 +102,4 @@ games_interests = %w[
 games_interests.each do |interest|
   InterestCategory.find_by(category_name: 'Games').interests.create!(name: interest)
 end
+AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?

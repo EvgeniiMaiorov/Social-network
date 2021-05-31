@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
   devise_for :users, controllers: { sessions: 'sessions', registrations: 'registrations' }, defaults: { format: :json }
 
   root 'pages#index'
+
+  resources :users, controller: 'pages', only: [] do
+    post :login_as, on: :member
+  end
 
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
