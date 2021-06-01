@@ -42,10 +42,6 @@ module Api
         end
       end
 
-      def user
-        render json: current_user
-      end
-
       private
 
       def user_params

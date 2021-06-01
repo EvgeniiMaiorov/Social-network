@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { decodeToken } from 'react-jwt'
 import styled from 'styled-components'
 import { Col, Row, Container, MediaBox } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -106,12 +108,13 @@ const ProfilePage = (props) => {
   const [user, setUser] = useState({})
 
   useEffect(() => {
-    axios.get('/api/v1/current_user', { headers: { Authorization: props.userToken } })
+    const decodedUserToken = decodeToken(props.userToken)
+
+    axios.get(`/api/v1/users/${decodedUserToken.sub}`)
     .then((response) => {
       setUser(response.data.user)
     })
   }, [])
-
   return (
     <>
     <LoginFormWrapper>

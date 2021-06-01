@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { isExpired } from 'react-jwt'
 import { createGlobalStyle } from 'styled-components'
 import MainRouter from './MainRouter'
 
@@ -17,6 +18,18 @@ const App = () => {
     localStorage.setItem('token', token)
     setUserToken(token)
   }
+
+  const logoutHandler = () => {
+    localStorage.removeItem('token')
+    setUserToken(null)
+  }
+
+  useEffect(() =>{
+    if (!userToken) return
+
+    const isTokenExpired = isExpired(userToken)
+    if (isTokenExpired) logoutHandler()
+  }, [userToken])
 
   return (
     <>
