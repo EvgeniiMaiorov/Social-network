@@ -35,9 +35,9 @@ module Api
       end
 
       def update_user_interests
-        current_user.interest_ids = Interest.where(id: params[:interest_ids]).pluck(:id)
-
-        head :ok
+        current_user.interest_ids = params[:interest_ids]
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: 'Invalid interest id' }, status: :not_found
       end
 
       def destroy
