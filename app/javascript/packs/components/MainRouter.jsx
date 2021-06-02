@@ -14,7 +14,7 @@ const MainRouter = (props) => {
           <InterestsPage userToken={props.userToken} />
         </Route>
         <Route path="/users">
-          <ProfilePage userToken={props.userToken} />
+          <ProfilePage userToken={props.userToken} logoutHandler={props.logoutHandler} />
         </Route>
         <Route path="/sign-up">
           <SignUp loginHandler={props.loginHandler} />
