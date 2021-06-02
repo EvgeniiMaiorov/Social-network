@@ -6,7 +6,7 @@ ActiveAdmin.register User do
     column :email
 
     actions defaults: true do |user|
-      item 'Log in As', login_as_user_path(user), method: :post, target: :_blank, class: 'member_link'
+      item 'Log in As', admin_login_as_path(id: user.id), method: :post, target: :_blank, class: 'member_link'
     end
   end
 

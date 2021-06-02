@@ -7,8 +7,8 @@ Rails.application.routes.draw do
 
   root 'pages#index'
 
-  resources :users, controller: 'pages', only: [] do
-    post :login_as, on: :member
+  namespace :admin do
+    post :login_as, to: 'impersonations#login_as'
   end
 
   namespace :api, constraints: { format: 'json' } do
