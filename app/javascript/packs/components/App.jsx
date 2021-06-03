@@ -13,7 +13,9 @@ html, body {
 `
 
 const App = () => {
+  const urlParams = new URLSearchParams(window.location.search)
   const [userToken, setUserToken] = useState(localStorage.getItem('token'))
+
   const loginHandler = (token) => {
     localStorage.setItem('token', token)
     setUserToken(token)
@@ -23,6 +25,12 @@ const App = () => {
     localStorage.removeItem('token')
     setUserToken(null)
   }
+
+  useEffect( () => {
+    const token = urlParams.get('token')
+
+    if (token) loginHandler(token)
+  }, [])
 
   useEffect(() =>{
     if (!userToken) return

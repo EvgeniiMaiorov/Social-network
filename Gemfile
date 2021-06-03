@@ -5,6 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.0'
 
+gem 'activeadmin', '~> 2.9'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'carrierwave', '~> 2.0'
