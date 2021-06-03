@@ -107,6 +107,16 @@ const NameWrapper = styled.div`
 const ProfilePage = (props) => {
   const [user, setUser] = useState({})
 
+  const logout = (e) => {
+    e.preventDefault()
+    axios.delete(`/users/sign_out`, { headers: { Authorization: props.userToken } })
+    .then(() => {
+      props.logoutHandler()
+    })
+  }
+
+
+
   useEffect(() => {
     const decodedUserToken = decodeToken(props.userToken)
 
@@ -137,6 +147,9 @@ const ProfilePage = (props) => {
           </Row>
           <Row>
            <Link to="/messages">Messages</Link>
+          </Row>
+          <Row>
+            <a href="#" onClick={logout}>Logout</a>
           </Row>
         </LinksWrapper>
       </Col>

@@ -42,7 +42,7 @@ const App = () => {
   return (
     <>
       <Global />
-      <MainRouter loginHandler={loginHandler} userToken={userToken} />
+      <MainRouter loginHandler={loginHandler} userToken={userToken} logoutHandler={logoutHandler} />
     </>
   )
 }
