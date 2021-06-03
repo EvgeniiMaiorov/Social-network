@@ -7,12 +7,13 @@ Rails.application.routes.draw do
 
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      # resources :users, exclude: %i[new edit]
+      scope :users do
+        patch :update_user_interests, to: 'users#update_user_interests'
+      end
 
-      get :interests, to: 'interests#index'
-      get :current_user, to: 'users#user'
+      resources :interest_categories, only: [:index]
+      resources :interests, only: [:index]
 
-      resources :interest_categories
       resources :invitations do
         member do
           patch :accept

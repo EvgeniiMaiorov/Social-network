@@ -4,7 +4,7 @@ module Api
   module V1
     class InterestsController < Api::V1::ApplicationController
       def index
-        interests = Interest.all
+        interests = current_user.interests
 
         render json: interests
       end

@@ -64,23 +64,45 @@ const LogoTitle = styled.div`
 
 const InterestsPage = (props) => {
   const [interestCategories, setInterestCategories] = useState([])
-
+  const [userInterests, setUserInterests] = useState()
   const [interestsByCategory, setInterestsByCategory] = useState({})
-
+  const [loading, setLoading] = useState(true)
   const history = useHistory()
 
   useEffect(() => {
     axios.get('/api/v1/interest_categories', { headers: { Authorization: props.userToken } })
     .then((response) => {
       setInterestCategories(response.data.interest_categories)
-      setInterestsByCategory(response.data.interest_categories.reduce((acc, interestCategory) => acc[interestCategory.id] = [], {}))
+    })
+    axios.get('/api/v1/interests', { headers: { Authorization: props.userToken } })
+    .then((response) => {
+      setUserInterests(response.data.interests)
     })
   }, [])
+
+  useEffect(() => {
+    if (interestCategories.length === 0 || !userInterests) return
+
+    const userInterestIdsByCategory = (interestCategoryId) => {
+      const userInterestsIds = userInterests
+      .filter((userInterest) => userInterest.interest_category_id === interestCategoryId )
+      .map((userInterest) => userInterest.id.toString())
+
+      return userInterestsIds
+    }
+
+    setInterestsByCategory(interestCategories.reduce((acc, interestCategory) => {
+      acc[interestCategory.category_name] = userInterestIdsByCategory(interestCategory.id)
+
+      return acc
+    }, {}))
+    setLoading(false)
+  }, [interestCategories, userInterests])
 
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     const interestsIds = Object.keys(values).reduce((acc, key) => [...acc, ...values[key]], [])
-    axios.post('/api/v1/users/interests', { interestsIds }, { headers: { Authorization: props.userToken } })
+    axios.patch('/api/v1/users/update_user_interests', { interest_ids: interestsIds }, { headers: { Authorization: props.userToken } })
       .then((response) => {
         setSubmitting(false)
         history.push('/users')
@@ -103,33 +125,35 @@ const InterestsPage = (props) => {
               <img src="/logo.png" alt="" />
             </LogoTitle>
             <Text>Select your interests</Text>
-            <Formik
-              initialValues={interestsByCategory}
-              onSubmit={onSubmit}
-            >
-              {({ isSubmitting }) => (
-                <Form>
-                  <Row>
-                    { interestCategories?.map((interestCategory) => (
-                      <Col key={interestCategory.id} xl={4}>
-                        <Field as={Select} name={interestCategory.id} multiple>
-                          <option value="" disabled>{interestCategory.category_name}</option>
-                          {interestCategory.interests.map((interest) => (
-                            <option key={interest.id} value={interest.id}>{interest.name}</option>
-                          ))}
-                        </Field>
-                      </Col>
+            { !loading && (
+              <Formik
+                initialValues={interestsByCategory}
+                onSubmit={onSubmit}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <Row>
+                      { interestCategories?.map((interestCategory) => (
+                        <Col key={interestCategory.id} xl={4}>
+                          <Field as={Select} name={interestCategory.category_name} multiple>
+                            <option value="" disabled>{interestCategory.category_name}</option>
+                            {interestCategory.interests.map((interest) => (
+                              <option key={interest.id} value={interest.id}>{interest.name}</option>
+                            ))}
+                          </Field>
+                        </Col>
 
-                    ))}
-                  </Row>
-                  <Row>
-                    <Col offset="s5">
-                      <SignUpButton type="submit" disabled={isSubmitting}>Confirm</SignUpButton>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
+                      ))}
+                    </Row>
+                    <Row>
+                      <Col offset="s5">
+                        <SignUpButton type="submit" disabled={isSubmitting}>Confirm</SignUpButton>
+                      </Col>
+                    </Row>
+                  </Form>
+                )}
+              </Formik>
+            )}
           </LoginFormWrapper>
         </Col>
       </Row>

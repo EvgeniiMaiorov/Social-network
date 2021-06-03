@@ -34,16 +34,18 @@ module Api
         end
       end
 
+      def update_user_interests
+        current_user.interest_ids = params[:interest_ids]
+      rescue ActiveRecord::RecordNotFound
+        render json: { error: 'Invalid interest id' }, status: :not_found
+      end
+
       def destroy
         if @user.destroy
           head :no_content
         else
           render json: { error: @user.errors.messages }, status: :unprocessable_entity
         end
-      end
-
-      def user
-        render json: current_user
       end
 
       private
