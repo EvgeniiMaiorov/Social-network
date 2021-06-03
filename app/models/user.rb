@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   self.skip_session_storage = %i[http_auth params_auth]
 
-  mount_uploader :photo_url, PhotoUploader
+  mount_uploader :photo, PhotoUploader
 
   has_many :user_interests, dependent: :destroy
   has_many :interests, through: :user_interests
