@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 import SignUp from './SignUp'
 import LogInPage from './LogInPage'
 import InterestsPage from './InterestsPage'
+import ProfilePage from './ProfilePage'
 
 const MainRouter = (props) => {
   return (
@@ -13,7 +14,7 @@ const MainRouter = (props) => {
           <InterestsPage userToken={props.userToken} />
         </Route>
         <Route path="/users">
-          <div>User</div>
+          <ProfilePage userToken={props.userToken} />
         </Route>
         <Route path="/sign-up">
           <SignUp loginHandler={props.loginHandler} />

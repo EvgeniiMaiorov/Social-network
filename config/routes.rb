@@ -12,7 +12,7 @@ Rails.application.routes.draw do
       end
 
       resources :interest_categories, only: [:index]
-      resources :interests, only: [:index]
+      get :interests, to: 'interests#index'
 
       resources :invitations do
         member do
