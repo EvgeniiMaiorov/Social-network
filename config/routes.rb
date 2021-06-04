@@ -13,8 +13,8 @@ Rails.application.routes.draw do
 
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      scope :users do
-        patch :update_user_interests, to: 'users#update_user_interests'
+      resources :users do
+        patch :update_user_interests, on: :collection
       end
 
       resources :interest_categories, only: [:index]
