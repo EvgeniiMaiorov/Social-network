@@ -5,7 +5,6 @@ import { Col, Row, Container, MediaBox } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 
-
 const PageContainer = styled(Container)`
   width: 100%;
   max-width: 1920px;
@@ -115,12 +114,10 @@ const ProfilePage = (props) => {
     })
   }
 
-
-
   useEffect(() => {
     const decodedUserToken = decodeToken(props.userToken)
 
-    axios.get(`/api/v1/users/${decodedUserToken.sub}`)
+    axios.get(`/api/v1/users/${decodedUserToken.sub}`, { headers: { Authorization: props.userToken } })
     .then((response) => {
       setUser(response.data.user)
     })
@@ -160,7 +157,7 @@ const ProfilePage = (props) => {
                 <MediaBox className="circle" >
                   <img
                   alt=""
-                  src={ user.photo_url?.url || '/placeholder.png' }
+                  src={ user.photo?.url || '/placeholder.png' }
                   width="160"
                   height="160"
                 />
