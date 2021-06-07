@@ -4,6 +4,7 @@ import SignUp from './SignUp'
 import LogInPage from './LogInPage'
 import InterestsPage from './InterestsPage'
 import ProfilePage from './ProfilePage'
+import ProfileEditPage from './ProfileEditPage'
 
 const MainRouter = (props) => {
   return (
@@ -12,6 +13,9 @@ const MainRouter = (props) => {
       <Switch>
         <Route path="/interests">
           <InterestsPage userToken={props.userToken} />
+        </Route>
+        <Route path="/profile_edit">
+          <ProfileEditPage userToken={props.userToken} />
         </Route>
         <Route path="/users">
           <ProfilePage userToken={props.userToken} logoutHandler={props.logoutHandler} />
