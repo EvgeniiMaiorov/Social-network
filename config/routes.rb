@@ -3,7 +3,11 @@
 Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
-  devise_for :users, controllers: { sessions: 'sessions', registrations: 'registrations' }, defaults: { format: :json }
+  devise_for :users, controllers: {
+    sessions: 'sessions',
+    registrations: 'registrations',
+    omniauth_callbacks: 'omniauth_callbacks'
+  }, defaults: { format: :json }
 
   root 'pages#index'
 
