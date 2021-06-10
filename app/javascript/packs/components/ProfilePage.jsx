@@ -72,7 +72,7 @@ const Text = styled.div`
 
 const LinksWrapper = styled.div`
   position: absolute;
-  width: 80px;
+  width: 90px;
   height: 22px;
   left: 110px;
   top: 170px;
@@ -137,7 +137,7 @@ const ProfilePage = (props) => {
             <Link to="/users">My page</Link>
           </Row>
           <Row>
-           <Link to="/friends">My friends</Link>
+           <Link to="/profile_edit">Edit profile</Link>
           </Row>
           <Row>
            <Link to="/news">News</Link>
