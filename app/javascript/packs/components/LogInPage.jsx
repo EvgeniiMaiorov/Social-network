@@ -119,10 +119,9 @@ const LogInPage = (props) => {
     axios.post('/users/auth/google_oauth2/callback', response.qc, {headers: {
       'Authorization': `Bearer ${response.qc.accessToken}`,
       'Content-Type': 'application/json',
-      'access_token': `${response.qc.accessToken}`
+      'access_token': response.qc.accessToken
     }})
     .then((response) => {
-      console.log('response.headers :>> ', response.headers);
       props.loginHandler(response.headers.authorization)
     })
   }
@@ -171,7 +170,7 @@ const LogInPage = (props) => {
                       clientId="511856659895-k2d41bc5g4tejsc78vom8lla02rnlm0b.apps.googleusercontent.com"
                       buttonText="Sign in with Google"
                       onSuccess={responseGoogle}
-                      onFailure={responseGoogle}
+                      onFailure={(response) => console.log('response >> ', response)}
                       prompt="select_account"
                       >
                     </GoogleLogin>
