@@ -26,7 +26,8 @@ class User < ApplicationRecord
 
   def self.from_omniauth(access_token, provider_identifier)
     data = access_token.info
-    User.find_or_create_by(email: data['email'], provider_identifier: provider_identifier) do |user|
+
+    User.find_or_initialize_by(email: data['email'], provider_identifier: provider_identifier) do |user|
       user.first_name = data['first_name']
       user.last_name = data['last_name']
       user.remote_photo_url = data['image']

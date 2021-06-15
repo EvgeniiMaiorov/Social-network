@@ -74,6 +74,7 @@ const InterestsPage = (props) => {
     .then((response) => {
       setInterestCategories(response.data.interest_categories)
     })
+
     axios.get('/api/v1/interests', { headers: { Authorization: props.userToken } })
     .then((response) => {
       setUserInterests(response.data.interests)
@@ -102,6 +103,7 @@ const InterestsPage = (props) => {
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
     const interestsIds = Object.keys(values).reduce((acc, key) => [...acc, ...values[key]], [])
+
     axios.patch('/api/v1/users/update_user_interests', { interest_ids: interestsIds }, { headers: { Authorization: props.userToken } })
       .then((response) => {
         setSubmitting(false)

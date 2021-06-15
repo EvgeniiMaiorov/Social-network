@@ -36,6 +36,7 @@ const App = () => {
     if (!userToken) return
 
     const isTokenExpired = isExpired(userToken)
+
     if (isTokenExpired) logoutHandler()
   }, [userToken])
 

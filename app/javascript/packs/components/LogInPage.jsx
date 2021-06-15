@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
+import { useHistory } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
@@ -91,8 +92,11 @@ const GoogleLoginWrapper = styled.div`
 `
 
 const LogInPage = (props) => {
+  const history = useHistory()
+
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
+
     axios.post('/users/sign_in', { user: values })
     .then((response) => {
       setSubmitting(false)
@@ -104,14 +108,17 @@ const LogInPage = (props) => {
 
   const validateValues = (values) => {
     const errors = {}
+
     if (!values.email) {
       errors.email = 'Required'
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
       errors.email = 'Invalid email address'
     }
+
     if (!values.password) {
       errors.password = 'Required'
     }
+
     return errors
   }
 
@@ -123,6 +130,10 @@ const LogInPage = (props) => {
     }})
     .then((response) => {
       props.loginHandler(response.headers.authorization)
+
+      if (!response.data.persisted) {
+        history.push('/interests')
+      }
     })
   }
 
