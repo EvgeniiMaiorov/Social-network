@@ -15,6 +15,7 @@ class User < ApplicationRecord
 
   has_many :user_interests, dependent: :destroy
   has_many :interests, through: :user_interests
+  has_many :posts, dependent: :destroy
   has_many :own_invitations, class_name: 'Invitation', dependent: :destroy
   has_many :received_invitations, class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy
   has_many :pending_invitations, -> { pending }, class_name: 'Invitation'
