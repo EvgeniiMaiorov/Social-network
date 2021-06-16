@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_02_184545) do
+ActiveRecord::Schema.define(version: 2021_06_15_201401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,16 @@ ActiveRecord::Schema.define(version: 2021_06_02_184545) do
     t.index ["jti"], name: "index_jwt_denylist_on_jti"
   end
 
+  create_table "posts", force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.string "image"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
   create_table "user_interests", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "interest_id", null: false
@@ -94,13 +104,15 @@ ActiveRecord::Schema.define(version: 2021_06_02_184545) do
     t.datetime "last_sign_in_at"
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.string "provider_identifier"
+    t.index ["email", "provider_identifier"], name: "index_users_on_email_and_provider_identifier", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "interests", "interest_categories"
   add_foreign_key "invitations", "users"
   add_foreign_key "invitations", "users", column: "friend_id"
+  add_foreign_key "posts", "users"
   add_foreign_key "user_interests", "interests"
   add_foreign_key "user_interests", "users"
 end

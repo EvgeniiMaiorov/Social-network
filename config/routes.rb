@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       end
 
       resources :interest_categories, only: [:index]
+      resources :posts
       get :interests, to: 'interests#index'
 
       resources :invitations do
