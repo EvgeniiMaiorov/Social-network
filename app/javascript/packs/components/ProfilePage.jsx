@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Col, Row, Container, MediaBox } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import OnlineTracker from './OnlineTracker'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -103,6 +104,17 @@ const NameWrapper = styled.div`
   color: #333333;
 `
 
+const OnlineWrapper = styled.div`
+  width: 102px;
+  height: 33px;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 119.5%;
+  padding-left: 90px;
+`
+
 const ProfilePage = (props) => {
   const [user, setUser] = useState({})
 
@@ -156,13 +168,16 @@ const ProfilePage = (props) => {
             <AvatarWrapper>
                 <MediaBox className="circle" >
                   <img
-                  alt=""
-                  src={ user.photo?.url || '/placeholder.png' }
-                  width="160"
-                  height="160"
-                />
+                    alt=""
+                    src={ user.photo?.url || '/placeholder.png' }
+                    width="160"
+                    height="160"
+                  />
                 </MediaBox>
             </AvatarWrapper>
+            <OnlineWrapper>
+              <OnlineTracker userToken={props.userToken} userId={user.id} />
+            </OnlineWrapper>
           </Col>
             <NameWrapper>
               {user.first_name} {user.last_name}

@@ -3,7 +3,7 @@
 module Api
   module V1
     class UsersController < Api::V1::ApplicationController
-      before_action :find_user, only: %i[show update destroy]
+      before_action :find_user, only: %i[show update destroy online_status]
 
       def index
         users = User.all
@@ -47,10 +47,20 @@ module Api
         end
       end
 
+      def online_at
+        current_user.update(online_at: Time.now.utc)
+
+        head :no_content
+      end
+
+      def online_status
+        render json: @user.online_at >= 3.minutes.ago, staus: :ok
+      end
+
       private
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :photo)
+        params.require(:user).permit(:first_name, :last_name, :email, :photo, :online_at)
       end
 
       def find_user

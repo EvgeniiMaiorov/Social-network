@@ -101,7 +101,7 @@ const SignUp = (props) => {
     formData.append('user[password]', values.password)
     formData.append('user[photo]', values.photo)
     axios.post('/users', formData).then((response) => {
-      props.loginHandler(response.headers.authorization, response.data.user)
+      props.loginHandler(response.headers.authorization)
       setSubmitting(false)
       history.push('/interests')
     }).catch((error) => {

@@ -81,7 +81,7 @@ const LogInPage = (props) => {
     axios.post('/users/sign_in', { user: values })
     .then((response) => {
       setSubmitting(false)
-      props.loginHandler(response.headers.authorization, response.data.user)
+      props.loginHandler(response.headers.authorization)
     }).catch((error) => {
       setSubmitting(false)
     })
