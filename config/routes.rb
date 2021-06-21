@@ -19,6 +19,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users do
         patch :update_user_interests, on: :collection
+        patch :online_at, on: :collection
+        get :online_status, on: :collection
         resources :posts, shallow: true, except: %i[new edit]
       end
 

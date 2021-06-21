@@ -106,6 +106,8 @@ ActiveRecord::Schema.define(version: 2021_06_15_201401) do
     t.inet "last_sign_in_ip"
     t.string "provider_identifier"
     t.index ["email", "provider_identifier"], name: "index_users_on_email_and_provider_identifier", unique: true
+    t.datetime "online_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

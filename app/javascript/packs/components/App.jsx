@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { isExpired } from 'react-jwt'
 import { createGlobalStyle } from 'styled-components'
@@ -26,19 +27,27 @@ const App = () => {
     setUserToken(null)
   }
 
-  useEffect( () => {
-    const token = urlParams.get('token')
-
-    if (token) loginHandler(token)
-  }, [])
-
-  useEffect(() =>{
+  useEffect(() => {
     if (!userToken) return
 
     const isTokenExpired = isExpired(userToken)
 
     if (isTokenExpired) logoutHandler()
+
+    const interval = setInterval(() => {
+      axios.patch('/api/v1/users/online_at', {}, { headers: { Authorization: userToken } })
+    }, 60000)
+
+    return () => {
+      if (interval) clearInterval(interval)
+    }
   }, [userToken])
+
+  useEffect( () => {
+    const token = urlParams.get('token')
+
+    if (token) loginHandler(token)
+  }, [])
 
   return (
     <>
