@@ -15,10 +15,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users do
         patch :update_user_interests, on: :collection
+        resources :posts, shallow: true, except: %i[new edit]
       end
 
       resources :interest_categories, only: [:index]
-      resources :posts
       get :interests, to: 'interests#index'
 
       resources :invitations do
