@@ -108,6 +108,7 @@ const ProfilePage = (props) => {
 
   const logout = (e) => {
     e.preventDefault()
+
     axios.delete(`/users/sign_out`, { headers: { Authorization: props.userToken } })
     .then(() => {
       props.logoutHandler()
