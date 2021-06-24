@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_15_201401) do
+ActiveRecord::Schema.define(version: 2021_07_01_184921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,7 +60,8 @@ ActiveRecord::Schema.define(version: 2021_06_15_201401) do
     t.bigint "user_id", null: false
     t.bigint "friend_id", null: false
     t.string "status", default: "pending", null: false
-    t.index ["user_id"], name: "index_invitations_on_user_id"
+    t.index ["friend_id", "user_id"], name: "index_invitations_on_friend_id_and_user_id", unique: true
+    t.index ["user_id", "friend_id"], name: "index_invitations_on_user_id_and_friend_id", unique: true
   end
 
   create_table "jwt_denylist", force: :cascade do |t|
@@ -105,9 +106,9 @@ ActiveRecord::Schema.define(version: 2021_06_15_201401) do
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "provider_identifier"
+    t.datetime "online_since", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.jsonb "location"
     t.index ["email", "provider_identifier"], name: "index_users_on_email_and_provider_identifier", unique: true
-    t.datetime "online_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

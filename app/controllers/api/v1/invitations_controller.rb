@@ -7,7 +7,7 @@ module Api
       before_action :find_friend, only: [:create]
 
       def index
-        invitations = @user.invitations
+        invitations = @user.own_invitations
 
         render json: invitations
       end

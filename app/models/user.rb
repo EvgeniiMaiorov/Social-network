@@ -19,7 +19,8 @@ class User < ApplicationRecord
   has_many :own_invitations, class_name: 'Invitation', dependent: :destroy
   has_many :received_invitations, class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy
   has_many :pending_invitations, -> { pending }, class_name: 'Invitation'
-  has_many :accepted_invitations, -> { accepted }, class_name: 'Invitation'
+  has_many :own_accepted_invitations, -> { accepted }, class_name: 'Invitation'
+  has_many :received_accepted_invitations, -> { accepted }, class_name: 'Invitation', foreign_key: 'friend_id'
   has_many :rejected_invitations, -> { rejected }, class_name: 'Invitation'
 
   validates :first_name, :last_name, :email, presence: true
@@ -33,5 +34,9 @@ class User < ApplicationRecord
       user.last_name = data['last_name']
       user.remote_photo_url = data['image']
     end
+  end
+
+  def online?
+    online_since >= 3.minutes.ago
   end
 end

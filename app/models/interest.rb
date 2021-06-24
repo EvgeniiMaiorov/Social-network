@@ -6,5 +6,5 @@ class Interest < ApplicationRecord
   has_many :user_interests, dependent: :destroy
   has_many :users, through: :user_interests
 
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { scope: :interest_category_id }
 end

@@ -47,20 +47,42 @@ module Api
         end
       end
 
-      def online_at
-        current_user.update(online_at: Time.now.utc)
+      def online_since
+        current_user.update(online_since: Time.now.utc)
 
         head :no_content
       end
 
       def online_status
-        render json: @user.online_at >= 3.minutes.ago, staus: :ok
+        render json: @user.is_online, staus: :ok
+      end
+
+      def friends
+        friends =
+          User
+          .where(own_accepted_invitations_users: { friend_id: current_user.id })
+          .or(User.where(invitations: { user_id: current_user.id }))
+          .left_joins(:received_accepted_invitations, :own_accepted_invitations)
+
+        render json: friends
+      end
+
+      def subscribers
+        subscribers = User.joins(:rejected_invitations).where(invitations: { friend_id: current_user.id })
+
+        render json: subscribers
+      end
+
+      def pending_friendship
+        pending_friends = User.joins(:pending_invitations).where(invitations: { friend_id: current_user.id })
+
+        render json: pending_friends
       end
 
       private
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :photo, :online_at)
+        params.require(:user).permit(:first_name, :last_name, :email, :photo, :online_since)
       end
 
       def find_user

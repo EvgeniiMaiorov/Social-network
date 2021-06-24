@@ -4,6 +4,7 @@ import { Button, Col, Row, Container, Select } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
 import { useHistory } from 'react-router-dom'
+import MainLayout from './MainLayout'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -16,7 +17,7 @@ const LoginFormWrapper = styled.div`
   width: 825px;
   height: 650px;
   left: 450px;
-  top: 101px;
+  top: 150px;
   background: #FFFFFF;
   border-radius: 38px;
 `
@@ -114,52 +115,54 @@ const InterestsPage = (props) => {
   }
 
   return (
-    <PageContainer>
-      <Row>
-        <Col xl={7}>
-          <ImageWrapper>
-            <Image src="/rafiki.png" />
-          </ImageWrapper>
-        </Col>
-        <Col xl={12}>
-          <LoginFormWrapper>
-            <LogoTitle>
-              <img src="/logo.png" alt="" />
-            </LogoTitle>
-            <Text>Select your interests</Text>
-            { !loading && (
-              <Formik
-                initialValues={interestsByCategory}
-                onSubmit={onSubmit}
-              >
-                {({ isSubmitting }) => (
-                  <Form>
-                    <Row>
-                      { interestCategories?.map((interestCategory) => (
-                        <Col key={interestCategory.id} xl={4}>
-                          <Field as={Select} name={interestCategory.category_name} multiple>
-                            <option value="" disabled>{interestCategory.category_name}</option>
-                            {interestCategory.interests.map((interest) => (
-                              <option key={interest.id} value={interest.id}>{interest.name}</option>
-                            ))}
-                          </Field>
-                        </Col>
+    <MainLayout logoutHandler={props.logoutHandler} userToken={props.userToken}>
+      <PageContainer>
+        <Row>
+          <Col xl={7}>
+            <ImageWrapper>
+              <Image src="/rafiki.png" />
+            </ImageWrapper>
+          </Col>
+          <Col xl={12}>
+            <LoginFormWrapper>
+              <LogoTitle>
+                <img src="/logo.png" alt="" />
+              </LogoTitle>
+              <Text>Select your interests</Text>
+              { !loading && (
+                <Formik
+                  initialValues={interestsByCategory}
+                  onSubmit={onSubmit}
+                >
+                  {({ isSubmitting }) => (
+                    <Form>
+                      <Row>
+                        { interestCategories?.map((interestCategory) => (
+                          <Col key={interestCategory.id} xl={4}>
+                            <Field as={Select} name={interestCategory.category_name} multiple>
+                              <option value="" disabled>{interestCategory.category_name}</option>
+                              {interestCategory.interests.map((interest) => (
+                                <option key={interest.id} value={interest.id}>{interest.name}</option>
+                              ))}
+                            </Field>
+                          </Col>
 
-                      ))}
-                    </Row>
-                    <Row>
-                      <Col offset="s5">
-                        <SignUpButton type="submit" disabled={isSubmitting}>Confirm</SignUpButton>
-                      </Col>
-                    </Row>
-                  </Form>
-                )}
-              </Formik>
-            )}
-          </LoginFormWrapper>
-        </Col>
-      </Row>
-    </PageContainer>
+                        ))}
+                      </Row>
+                      <Row>
+                        <Col offset="s5">
+                          <SignUpButton type="submit" disabled={isSubmitting}>Confirm</SignUpButton>
+                        </Col>
+                      </Row>
+                    </Form>
+                  )}
+                </Formik>
+              )}
+            </LoginFormWrapper>
+          </Col>
+        </Row>
+      </PageContainer>
+    </MainLayout>
   )
 }
 
