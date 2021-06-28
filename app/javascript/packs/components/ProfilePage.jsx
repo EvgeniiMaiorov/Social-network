@@ -4,7 +4,8 @@ import styled from 'styled-components'
 import { Col, Row, Container, MediaBox } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import OnlineTracker from './OnlineTracker'
+
+import UserPosts from './UserPosts'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -58,15 +59,10 @@ const LogoTitle = styled.div`
 `
 
 const Text = styled.div`
-  position: absolute;
-  width: 102px;
-  height: 33px;
-  left: 166px;
-  top: 36px;
   font-family: Roboto;
   font-style: normal;
-  font-weight: bold;
-  font-size: 28px;
+  text-align: center;
+  font-size: 20px;
   line-height: 119.5%;
   color: #515B60;
 `
@@ -104,17 +100,6 @@ const NameWrapper = styled.div`
   color: #333333;
 `
 
-const OnlineWrapper = styled.div`
-  width: 102px;
-  height: 33px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 28px;
-  line-height: 119.5%;
-  padding-left: 90px;
-`
-
 const ProfilePage = (props) => {
   const [user, setUser] = useState({})
 
@@ -135,38 +120,39 @@ const ProfilePage = (props) => {
       setUser(response.data.user)
     })
   }, [])
+
   return (
     <>
-    <LoginFormWrapper>
-      <LogoTitle>
-        <img src="/logo.png" alt="" />
-        <Text>LetsTalk</Text>
-      </LogoTitle>
-    </LoginFormWrapper>
-    <PageContainer>
-      <Col>
-        <LinksWrapper>
-          <Row>
-            <Link to="/users">My page</Link>
-          </Row>
-          <Row>
-           <Link to="/profile_edit">Edit profile</Link>
-          </Row>
-          <Row>
-           <Link to="/news">News</Link>
-          </Row>
-          <Row>
-           <Link to="/messages">Messages</Link>
-          </Row>
-          <Row>
-            <a href="#" onClick={logout}>Logout</a>
-          </Row>
-        </LinksWrapper>
-      </Col>
-      <Col>
-        <ProfileInfo>
-          <Col xl={4}>
-            <AvatarWrapper>
+      <LoginFormWrapper>
+        <LogoTitle>
+          <img src="/logo.png" alt="" />
+          <Text>LetsTalk</Text>
+        </LogoTitle>
+      </LoginFormWrapper>
+      <PageContainer>
+        <Col>
+          <LinksWrapper>
+            <Row>
+              <Link to="/users">My page</Link>
+            </Row>
+            <Row>
+              <Link to="/profile_edit">Edit profile</Link>
+            </Row>
+            <Row>
+              <Link to="/news">News</Link>
+            </Row>
+            <Row>
+             <Link to="/messages">Messages</Link>
+            </Row>
+            <Row>
+              <a href="#" onClick={logout}>Logout</a>
+            </Row>
+          </LinksWrapper>
+        </Col>
+        <Col>
+          <ProfileInfo>
+            <Col xl={4}>
+              <AvatarWrapper>
                 <MediaBox className="circle" >
                   <img
                     alt=""
@@ -175,25 +161,28 @@ const ProfilePage = (props) => {
                     height="160"
                   />
                 </MediaBox>
-            </AvatarWrapper>
-            <OnlineWrapper>
-              <OnlineTracker userToken={props.userToken} userId={user.id} />
-            </OnlineWrapper>
-          </Col>
-            <NameWrapper>
-              {user.first_name} {user.last_name}
-            </NameWrapper>
-        </ProfileInfo>
-      </Col>
-      <Col>
-        <Row>
-          <RecentActivites />
-        </Row>
-        <Row>
-          <MapWrapper />
-        </Row>
-      </Col>
-    </PageContainer>
+              </AvatarWrapper>
+            </Col>
+              <NameWrapper>
+                {user.first_name} {user.last_name}
+              </NameWrapper>
+              <hr />
+            <Row>
+              <Col xl={12}>
+                <UserPosts userToken={props.userToken} userId={user.id} />
+              </Col>
+            </Row>
+          </ProfileInfo>
+        </Col>
+        <Col>
+          <Row>
+            <RecentActivites />
+          </Row>
+          <Row>
+            <MapWrapper />
+          </Row>
+        </Col>
+      </PageContainer>
     </>
   )
 }

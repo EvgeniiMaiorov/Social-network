@@ -6,7 +6,7 @@ module Api
       before_action :find_post, only: %i[update destroy]
 
       def index
-        posts = Post.where(user_id: params[:user_id])
+        posts = Post.where(user_id: params[:user_id]).order(id: :desc)
 
         render json: posts
       end
