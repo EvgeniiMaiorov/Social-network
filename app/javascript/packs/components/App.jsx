@@ -35,7 +35,7 @@ const App = () => {
     if (isTokenExpired) logoutHandler()
 
     const interval = setInterval(() => {
-      axios.patch('/api/v1/users/online_since', {}, { headers: { Authorization: userToken } })
+      axios.patch('/api/v1/users/online_at', {}, { headers: { Authorization: userToken } })
     }, 60000)
 
     return () => {

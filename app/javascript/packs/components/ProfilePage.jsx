@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import { Col, Row, Container, MediaBox } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-
 import UserPosts from './UserPosts'
 
 const PageContainer = styled(Container)`

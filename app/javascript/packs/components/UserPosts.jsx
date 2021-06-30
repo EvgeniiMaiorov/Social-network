@@ -7,7 +7,7 @@ import * as Yup from 'yup'
 
 const postCreateValues = { title: '', body: '', image: '' }
 
-const userPosts = (props) => {
+const UserPosts = (props) => {
   const [posts, setPosts] = useState([])
   const inputFile = useRef(null)
 
@@ -108,18 +108,20 @@ const userPosts = (props) => {
       <Row>
         <Col xl={12}>
           <Collection>
-            {posts.map(posts => (
-              <CollectionItem key={posts.id} className="avatar">
-                <img
-                  alt=""
-                  className="circle responseve-img"
-                  src={posts.image.url || '/placeholder.png'}
+            {posts.map((post) => (
+              <CollectionItem key={post.id} className="avatar">
+                { post.image.url && (
+                  <img
+                    alt=""
+                    className="circle responseve-img"
+                    src={post.image.url}
                   />
+                )}
                 <span className="title" style={{fontWeight: 'bold'}}>
-                  { posts.title }
+                  { post.title }
                 </span>
                 <p>
-                  { posts.body }
+                  { post.body }
                 </p>
               </CollectionItem>
             ))}
@@ -131,4 +133,4 @@ const userPosts = (props) => {
 }
 
 
-export default userPosts
+export default UserPosts

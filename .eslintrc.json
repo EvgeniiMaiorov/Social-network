@@ -22,6 +22,6 @@
         "no-console": 0,
         "import/no-unresolved": [2, { "caseSensitive": false }],
         "object-curly-newline": [2, { "consistent": true }],
-        "code": 120
+        "max-len": [1, 120]
     }
 }

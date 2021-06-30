@@ -47,20 +47,20 @@ module Api
         end
       end
 
-      def online_since
-        current_user.update(online_since: Time.now.utc)
+      def online_at
+        current_user.update(online_at: Time.now.utc)
 
         head :no_content
       end
 
       def online_status
-        render json: @user.online_since >= 3.minutes.ago, staus: :ok
+        render json: @user.online_at >= 3.minutes.ago, staus: :ok
       end
 
       private
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :photo, :online_since)
+        params.require(:user).permit(:first_name, :last_name, :email, :photo, :online_at)
       end
 
       def find_user

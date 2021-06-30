@@ -123,10 +123,10 @@ const LogInPage = (props) => {
   }
 
   const responseGoogle = (response) => {
-    axios.post('/users/auth/google_oauth2/callback', response.tokenObj, {headers: {
-      'Authorization': `Bearer ${response.tokenObj.accessToken}`,
+    axios.post('/users/auth/google_oauth2/callback', response.qc, {headers: {
+      'Authorization': `Bearer ${response.qc.accessToken}`,
       'Content-Type': 'application/json',
-      'access_token': response.tokenObj.accessToken
+      'access_token': response.qc.accessToken
     }})
     .then((response) => {
       props.loginHandler(response.headers.authorization)
