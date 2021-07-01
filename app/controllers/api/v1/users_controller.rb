@@ -57,10 +57,16 @@ module Api
         render json: @user.online_at >= 3.minutes.ago, staus: :ok
       end
 
+      def location
+        current_user.update(location: params[:location])
+
+        head :no_content
+      end
+
       private
 
       def user_params
-        params.require(:user).permit(:first_name, :last_name, :email, :photo, :online_at)
+        params.require(:user).permit(:first_name, :last_name, :email, :photo)
       end
 
       def find_user

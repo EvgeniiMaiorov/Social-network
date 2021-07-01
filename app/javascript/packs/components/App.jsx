@@ -38,7 +38,18 @@ const App = () => {
       axios.patch('/api/v1/users/online_at', {}, { headers: { Authorization: userToken } })
     }, 60000)
 
+    const locationWhatcher = navigator.geolocation.watchPosition((position) => {
+      const { latitude, longitude } = position.coords
+
+      axios.patch(
+        '/api/v1/users/location',
+        { location: { latitude, longitude } },
+        { headers: { Authorization: userToken } }
+      )
+    })
+
     return () => {
+      if (locationWhatcher) navigator.geolocation.clearWatch(locationWhatcher)
       if (interval) clearInterval(interval)
     }
   }, [userToken])

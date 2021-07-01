@@ -5,6 +5,7 @@ import { Col, Row, Container, MediaBox } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import OnlineTracker from './OnlineTracker'
+import GoogleMap from './GoogleMap'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -190,7 +191,9 @@ const ProfilePage = (props) => {
           <RecentActivites />
         </Row>
         <Row>
-          <MapWrapper />
+          <MapWrapper>
+            <GoogleMap user={user} />
+          </MapWrapper>
         </Row>
       </Col>
     </PageContainer>

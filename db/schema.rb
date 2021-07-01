@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_15_201401) do
+ActiveRecord::Schema.define(version: 2021_07_01_184921) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,7 @@ ActiveRecord::Schema.define(version: 2021_06_15_201401) do
     t.inet "current_sign_in_ip"
     t.inet "last_sign_in_ip"
     t.string "provider_identifier"
+    t.jsonb "location"
     t.index ["email", "provider_identifier"], name: "index_users_on_email_and_provider_identifier", unique: true
     t.datetime "online_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
