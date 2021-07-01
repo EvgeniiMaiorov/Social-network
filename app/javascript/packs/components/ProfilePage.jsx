@@ -20,8 +20,11 @@ const LoginFormWrapper = styled.div`
 `
 =======
 import OnlineTracker from './OnlineTracker'
+<<<<<<< HEAD
 import MainLayout from './MainLayout'
 >>>>>>> Add friend page
+=======
+>>>>>>> Rewokr logic after review
 
 const ProfileInfo = styled.div`
   position: absolute;
@@ -128,8 +131,8 @@ const ProfilePage = (props) => {
   }, [])
 
   return (
-    <MainLayout logoutHandler={props.logoutHandler} userToken={props.userToken}>
-      <Col>
+    <Row>
+      <Col xl={12}>
         <ProfileInfo>
           <Col xl={4}>
             <AvatarWrapper>
@@ -159,7 +162,7 @@ const ProfilePage = (props) => {
           <MapWrapper />
         </Row>
       </Col>
-    </MainLayout>
+    </Row>
   )
 }
 

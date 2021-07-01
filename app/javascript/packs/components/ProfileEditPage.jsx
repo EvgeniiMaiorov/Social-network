@@ -6,7 +6,6 @@ import { Formik, Form, Field } from 'formik'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import * as Yup from 'yup'
-import MainLayout from './MainLayout'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -144,77 +143,75 @@ const ProfileEditPage = (props) => {
   })
 
   return (
-    <MainLayout logoutHandler={props.logoutHandler} userToken={props.userToken}>
-      <PageContainer>
-        <Row>
-          <Col xl={7}>
-            <ImageWrapper>
-              <Image src="/amico.png" />
-            </ImageWrapper>
-          </Col>
-          <Col xl={6}>
-            <ProfileFormWrapper>
-              <Row>
-                <Text>Edit profile</Text>
-              </Row>
-              { !loading && (
-              <Formik
-                initialValues={profileEditInitialValues(user)}
-                onSubmit={onSubmit}
-                validationSchema={profileEditSchema}
-              >
-                {({ isSubmitting, errors, touched, setFieldValue, values }) => (
-                  <Form>
-                    <UploadPhoto>
-                      <img
-                        className="circle responseve-img"
-                        onClick={onClick}
-                        src={values.photo ? URL.createObjectURL(values.photo) : user.photo.url || '/placeholder.png'}
-                        alt=""
-                        width="160"
-                        height="160"
+    <PageContainer>
+      <Row>
+        <Col xl={7}>
+          <ImageWrapper>
+            <Image src="/amico.png" />
+          </ImageWrapper>
+        </Col>
+        <Col xl={6}>
+          <ProfileFormWrapper>
+            <Row>
+              <Text>Edit profile</Text>
+            </Row>
+            { !loading && (
+            <Formik
+              initialValues={profileEditInitialValues(user)}
+              onSubmit={onSubmit}
+              validationSchema={profileEditSchema}
+            >
+              {({ isSubmitting, errors, touched, setFieldValue, values }) => (
+                <Form>
+                  <UploadPhoto>
+                    <img
+                      className="circle responseve-img"
+                      onClick={onClick}
+                      src={values.photo ? URL.createObjectURL(values.photo) : user.photo.url || '/placeholder.png'}
+                      alt=""
+                      width="160"
+                      height="160"
+                    />
+                  </UploadPhoto>
+                  <Col xl={12}>
+                    <EditPhotoText onClick={onClick}>Edit photo</EditPhotoText>
+                  </Col>
+                  <input accept="image/*" type='file' name='photo' ref={inputFile} style={{display: 'none'}} onChange={onPhotoChange(setFieldValue)} />
+                  <Row>
+                    <Col offset="s6">
+                      <Field
+                        className={touched.first_name && errors.first_name ? 'invalid' : 'valid'}
+                        error={errors.first_name}
+                        name="first_name"
+                        label="First name"
+                        as={ProfileEditInput}
                       />
-                    </UploadPhoto>
-                    <Col xl={12}>
-                      <EditPhotoText onClick={onClick}>Edit photo</EditPhotoText>
                     </Col>
-                    <input accept="image/*" type='file' name='photo' ref={inputFile} style={{display: 'none'}} onChange={onPhotoChange(setFieldValue)} />
-                    <Row>
-                      <Col offset="s6">
-                        <Field
-                          className={touched.first_name && errors.first_name ? 'invalid' : 'valid'}
-                          error={errors.first_name}
-                          name="first_name"
-                          label="First name"
-                          as={ProfileEditInput}
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col offset="s6">
-                        <Field
-                          className={touched.last_name && errors.last_name ? 'invalid' : 'valid'}
-                          error={errors.last_name}
-                          name="last_name"
-                          label="Last name"
-                          as={ProfileEditInput}
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col offset="s5">
-                        <ProfileUpdateButton type="submit" disabled={isSubmitting}>Update</ProfileUpdateButton>
-                      </Col>
-                    </Row>
-                  </Form>
-                )}
-              </Formik>
+                  </Row>
+                  <Row>
+                    <Col offset="s6">
+                      <Field
+                        className={touched.last_name && errors.last_name ? 'invalid' : 'valid'}
+                        error={errors.last_name}
+                        name="last_name"
+                        label="Last name"
+                        as={ProfileEditInput}
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col offset="s5">
+                      <ProfileUpdateButton type="submit" disabled={isSubmitting}>Update</ProfileUpdateButton>
+                    </Col>
+                  </Row>
+                </Form>
               )}
-            </ProfileFormWrapper>
-          </Col>
-        </Row>
-      </PageContainer>
-    </MainLayout>
+            </Formik>
+            )}
+          </ProfileFormWrapper>
+        </Col>
+      </Row>
+    </PageContainer>
   )
 }
 

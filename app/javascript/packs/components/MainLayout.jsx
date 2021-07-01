@@ -1,8 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Col, Row, Navbar } from 'react-materialize'
-import { Link } from 'react-router-dom'
+import { Route, Link, Redirect, Switch } from 'react-router-dom'
 import axios from 'axios'
+import { useJwt } from 'react-jwt'
+import InterestsPage from './InterestsPage'
+import ProfilePage from './ProfilePage'
+import ProfileEditPage from './ProfileEditPage'
+import FriendPage from './FriendsPage'
 
 const LogoTitle = styled.div`
   display: flex;
@@ -31,6 +36,8 @@ const LinksWrapper = styled.div`
 `
 
 const MainLayout = (props) => {
+  const { decodedToken } = useJwt(props.userToken)
+
   const logout = (e) => {
     e.preventDefault()
 
@@ -42,45 +49,62 @@ const MainLayout = (props) => {
 
   return (
     <>
-  <Row>
-    <Col xl={12} >
-    <Navbar style={{background: 'white'}}>
-        <LogoTitle>
-          <img src="/logo.png" alt="" />
-          <Text>LetsTalk</Text>
-        </LogoTitle>
-    </Navbar>
-      </Col>
-    </Row>
-    <Row>
-      <Col offset="xl1" xl={2}>
-        <LinksWrapper>
-          <Row>
-            <Link to="/users">My page</Link>
-          </Row>
-          <Row>
-           <Link to="/profile_edit">Edit profile</Link>
-          </Row>
-          <Row>
-           <Link to="/news">News</Link>
-          </Row>
-          <Row>
-           <Link to="/friends">Friends</Link>
-          </Row>
-          <Row>
-           <Link to="/messages">Messages</Link>
-          </Row>
-          <Row>
-            <a href="#" onClick={logout}>Logout</a>
-          </Row>
-        </LinksWrapper>
-      </Col>
-      <Col xl={6}>
-        <ContentWrapper>
-          { props.children }
-        </ContentWrapper>
-      </Col>
-    </Row>
+      <Row>
+        <Col xl={12} >
+          <Navbar style={{background: 'white'}}>
+            <LogoTitle>
+              <img src="/logo.png" alt="" />
+              <Text>LetsTalk</Text>
+            </LogoTitle>
+          </Navbar>
+        </Col>
+      </Row>
+      <Row>
+        <Col offset="xl1" xl={2}>
+          <LinksWrapper>
+            <Row>
+              <Link to="/users">My page</Link>
+            </Row>
+            <Row>
+              <Link to="/profile_edit">Edit profile</Link>
+            </Row>
+            <Row>
+              <Link to="/news">News</Link>
+            </Row>
+            <Row>
+              <Link to="/friends">Friends</Link>
+            </Row>
+            <Row>
+              <Link to="/messages">Messages</Link>
+            </Row>
+            <Row>
+              <a href="#" onClick={logout}>Logout</a>
+            </Row>
+          </LinksWrapper>
+        </Col>
+        <Col xl={6}>
+          <ContentWrapper>
+            { decodedToken && (
+              <Switch>
+                <Route path="/friends">
+                  <FriendPage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route path="/interests">
+                  <InterestsPage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route path="/profile_edit">
+                  <ProfileEditPage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route path="/users">
+                  <ProfilePage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route render={() => <Redirect to="/users" />} path="*">
+                </Route>
+              </Switch>
+            ) }
+          </ContentWrapper>
+        </Col>
+      </Row>
     </>
   )
 }

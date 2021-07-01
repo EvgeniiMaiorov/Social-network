@@ -12,28 +12,50 @@ const Offline = styled.div`
 `
 
 const FriendList = (props) => {
-  const [friends, setFriends] = useState([])
+  const [ownInvitations, setOwnInvitations] = useState([])
+  const [receivedInvitations, setReceivedInvitations] = useState([])
 
   useEffect(() => {
-    axios.get(`/api/v1/users/${props.userId}/friends`, { headers: { Authorization: props.userToken } })
-      .then((response) => {
-      setFriends(response.data.users)
+    axios.get('/api/v1/invitations', {
+      params: {user_id: props.userId, type: 'friends'},
+      headers: { Authorization: props.userToken }
     })
+      .then((response) => {
+        setOwnInvitations(
+          response.data.invitations.filter((invitation) => invitation.user.id.toString() === props.userId)
+        )
+        setReceivedInvitations(
+          response.data.invitations.filter((invitation) => invitation.friend.id.toString() === props.userId)
+        )
+      })
   }, [props.userId, props.userToken])
 
   return (
     <>
-      {friends.map(friends => (
-        <CollectionItem key={friends.id} className="avatar">
+      {ownInvitations.map(ownInvitation => (
+        <CollectionItem key={ownInvitation.id} className="avatar">
           <img
             alt=""
             className="circle responseve-img"
-            src={friends.photo.url || '/placeholder.png'}
+            src={ownInvitation.friend.photo.url || '/placeholder.png'}
           />
           <span className="title">
-            {`${friends.first_name} ${friends.last_name}`}
+            {`${ownInvitation.friend.first_name} ${ownInvitation.friend.last_name}`}
           </span>
-            { friends.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
+            { ownInvitation.friend.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
+        </CollectionItem>
+      ))}
+      {receivedInvitations.map(receivedInvitation => (
+        <CollectionItem key={receivedInvitation.id} className="avatar">
+          <img
+            alt=""
+            className="circle responseve-img"
+            src={receivedInvitation.user.photo.url || '/placeholder.png'}
+          />
+          <span className="title">
+            {`${receivedInvitation.user.first_name} ${receivedInvitation.user.last_name}`}
+          </span>
+            { receivedInvitation.user.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
         </CollectionItem>
       ))}
     </>

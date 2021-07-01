@@ -12,28 +12,31 @@ const Offline = styled.div`
 `
 
 const SubscriberList = (props) => {
-  const [subscribers, setSubscribers] = useState([])
+  const [invitations, setInvitations] = useState([])
 
   useEffect(() => {
-    axios.get(`/api/v1/users/${props.userId}/subscribers`, { headers: { Authorization: props.userToken } })
-      .then((response) => {
-      setSubscribers(response.data.users)
+    axios.get('/api/v1/invitations', {
+      params: {user_id: props.userId, type: 'subscribers'},
+      headers: { Authorization: props.userToken }
     })
+      .then((response) => {
+        setInvitations(response.data.invitations)
+      })
   }, [props.userId, props.userToken])
 
   return (
     <>
-      {subscribers.map(subscribers => (
-        <CollectionItem key={subscribers.id} className="avatar">
+      {invitations.map(invitation => (
+        <CollectionItem key={invitation.id} className="avatar">
         <img
           alt=""
           className="circle responseve-img"
-          src={subscribers.photo.url || '/placeholder.png'}
+          src={invitation.user.photo.url || '/placeholder.png'}
           />
         <span className="title">
-          {`${subscribers.first_name} ${subscribers.last_name}`}
+          {`${invitation.user.first_name} ${invitation.user.last_name}`}
         </span>
-          { subscribers.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
+          { invitation.user.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
       </CollectionItem>
       ))}
     </>

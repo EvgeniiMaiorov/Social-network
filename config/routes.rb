@@ -21,9 +21,6 @@ Rails.application.routes.draw do
         patch :update_user_interests, on: :collection
         patch :online_since, on: :collection
         get :online_status, on: :collection
-        get :friends
-        get :subscribers
-        get :pending_friendship
         resources :posts, shallow: true, except: %i[new edit]
       end
 

@@ -12,28 +12,31 @@ const Offline = styled.div`
 `
 
 const pendingFriendship = (props) => {
-  const [pendingFriendship, setPendingFriendship] = useState([])
+  const [invitations, setInvitations] = useState([])
 
   useEffect(() => {
-    axios.get(`/api/v1/users/${props.userId}/pending_friendship`, { headers: { Authorization: props.userToken } })
-      .then((response) => {
-      setPendingFriendship(response.data.users)
+    axios.get('/api/v1/invitations', {
+      params: {user_id: props.userId, type: 'inviters'},
+      headers: { Authorization: props.userToken }
     })
+      .then((response) => {
+        setInvitations(response.data.invitations)
+      })
   }, [props.userId, props.userToken])
 
   return (
     <>
-      {pendingFriendship.map(pendingFriendship => (
-        <CollectionItem key={pendingFriendship.id} className="avatar">
+      {invitations.map(invitation => (
+        <CollectionItem key={invitation.id} className="avatar">
         <img
           alt=""
           className="circle responseve-img"
-          src={pendingFriendship.photo.url || '/placeholder.png'}
+          src={invitation.user.photo.url || '/placeholder.png'}
           />
         <span className="title">
-          {`${pendingFriendship.first_name} ${pendingFriendship.last_name}`}
+          {`${invitation.user.first_name} ${invitation.user.last_name}`}
         </span>
-          { pendingFriendship.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
+          { invitation.user.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
       </CollectionItem>
       ))}
     </>

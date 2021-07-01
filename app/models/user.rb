@@ -17,11 +17,8 @@ class User < ApplicationRecord
   has_many :interests, through: :user_interests
   has_many :posts, dependent: :destroy
   has_many :own_invitations, class_name: 'Invitation', dependent: :destroy
-  has_many :received_invitations, class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy
-  has_many :pending_invitations, -> { pending }, class_name: 'Invitation'
-  has_many :own_accepted_invitations, -> { accepted }, class_name: 'Invitation'
-  has_many :received_accepted_invitations, -> { accepted }, class_name: 'Invitation', foreign_key: 'friend_id'
-  has_many :rejected_invitations, -> { rejected }, class_name: 'Invitation'
+  has_many :received_invitations,
+           class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy, inverse_of: :user
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: { scope: :provider_identifier }

@@ -7,9 +7,22 @@ module Api
       before_action :find_friend, only: [:create]
 
       def index
-        invitations = @user.own_invitations
+        invitations =
+          case params[:type]
+          when 'friends'
+            Invitation.accepted.where(user_id: current_user.id)
+                      .or(Invitation.accepted.where(friend_id: current_user.id))
+          when 'subscribers'
+            Invitation.rejected.where(friend_id: current_user.id)
+          when 'inviters'
+            Invitation.pending.where(friend_id: current_user.id)
+          else
+            render json: { error: 'Missing type param' }, status: :bad_request
 
-        render json: invitations
+            return
+          end
+
+        render json: invitations.preload(:user, :friend)
       end
 
       def create

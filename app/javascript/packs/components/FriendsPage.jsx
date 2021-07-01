@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Col, Row, Collection, Tab, Tabs } from 'react-materialize'
-import axios from 'axios'
-import { decodeToken } from 'react-jwt'
 import FriendList from './FriendList'
 import PendingFriendship from './PendingFriendship'
-import MainLayout from './MainLayout'
 import SubscriberList from './SubscriberList'
 
 const ImageWrapper = styled.div`
@@ -23,19 +20,9 @@ const Image = styled.img`
 `
 
 const FriendsPage = (props) => {
-  const [user, setUser] = useState({})
 
-  useEffect(() => {
-    const decodedUserToken = decodeToken(props.userToken)
-
-    axios.get(`/api/v1/users/${decodedUserToken.sub}`, { headers: { Authorization: props.userToken } })
-    .then((response) => {
-      setUser(response.data.user)
-    })
-  }, [])
-
-  return (
-    <MainLayout logoutHandler={props.logoutHandler} userToken={props.userToken}>
+ return (
+    <>
       <ImageWrapper>
         <Image src="/rafiki.png" />
       </ImageWrapper>
@@ -44,20 +31,20 @@ const FriendsPage = (props) => {
           <Tabs>
             <Tab title="Friends" >
               <Collection>
-                <PendingFriendship userToken={props.userToken} userId={user.id} />
+                <PendingFriendship userToken={props.userToken} userId={props.userId} />
                   <br />
-                <FriendList userToken={props.userToken} userId={user.id} />
+                <FriendList userToken={props.userToken} userId={props.userId} />
               </Collection>
             </Tab>
             <Tab title="Subscriders" >
               <Collection>
-                <SubscriberList userToken={props.userToken} userId={user.id} />
+                <SubscriberList userToken={props.userToken} userId={props.userId} />
               </Collection>
             </Tab>
           </Tabs>
         </Col>
       </Row>
-    </MainLayout>
+    </>
   )
 }
 
