@@ -60,7 +60,6 @@ ActiveRecord::Schema.define(version: 2021_07_01_184921) do
     t.bigint "user_id", null: false
     t.bigint "friend_id", null: false
     t.string "status", default: "pending", null: false
-    t.index ["friend_id", "user_id"], name: "index_invitations_on_friend_id_and_user_id", unique: true
     t.index ["user_id", "friend_id"], name: "index_invitations_on_user_id_and_friend_id", unique: true
   end
 

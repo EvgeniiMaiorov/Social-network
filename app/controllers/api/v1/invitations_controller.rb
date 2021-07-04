@@ -10,19 +10,18 @@ module Api
         invitations =
           case params[:type]
           when 'friends'
-            Invitation.accepted.where(user_id: current_user.id)
-                      .or(Invitation.accepted.where(friend_id: current_user.id))
+            @user.friends
           when 'subscribers'
-            Invitation.rejected.where(friend_id: current_user.id)
+            @user.subscribers
           when 'inviters'
-            Invitation.pending.where(friend_id: current_user.id)
+            @user.inviters
           else
             render json: { error: 'Missing type param' }, status: :bad_request
 
             return
           end
 
-        render json: invitations.preload(:user, :friend)
+        render json: invitations
       end
 
       def create

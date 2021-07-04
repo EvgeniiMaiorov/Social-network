@@ -33,6 +33,21 @@ class User < ApplicationRecord
     end
   end
 
+  def friends
+    Invitation
+      .where(user_id: id, status: 'accepted')
+      .or(Invitation.where(friend_id: id, status: 'accepted'))
+      .map { |invitaion| invitaion.friend_id == id ? invitaion.user : invitaion.friend }
+  end
+
+  def subscribers
+    Invitation.includes(:user).rejected.where(friend_id: id).to_a
+  end
+
+  def inviters
+    Invitation.includes(:user).pending.where(friend_id: id).to_a
+  end
+
   def online?
     online_since >= 3.minutes.ago
   end
