@@ -17,7 +17,7 @@ Rails.application.routes.draw do
 
   namespace :api, constraints: { format: 'json' } do
     namespace :v1 do
-      resources :users do
+      resources :users, except: %i[new edit create] do
         patch :update_user_interests, on: :collection
         patch :online_since, on: :collection
         get :online_status, on: :collection

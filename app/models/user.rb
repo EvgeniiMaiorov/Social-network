@@ -9,6 +9,8 @@ class User < ApplicationRecord
          omniauth_providers: [:google_oauth2],
          jwt_revocation_strategy: JwtDenylist
 
+  before_validation :set_online_since, on: :create
+
   self.skip_session_storage = %i[http_auth params_auth]
 
   mount_uploader :photo, PhotoUploader
@@ -18,7 +20,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :own_invitations, class_name: 'Invitation', dependent: :destroy
   has_many :received_invitations,
-           class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy, inverse_of: :user
+           class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy, inverse_of: :friend
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: { scope: :provider_identifier }
@@ -34,21 +36,24 @@ class User < ApplicationRecord
   end
 
   def friends
-    Invitation
-      .where(user_id: id, status: 'accepted')
-      .or(Invitation.where(friend_id: id, status: 'accepted'))
-      .map { |invitaion| invitaion.friend_id == id ? invitaion.user : invitaion.friend }
+    own_invitations.includes(:friend).accepted + received_invitations.includes(:user).accepted
   end
 
   def subscribers
-    Invitation.includes(:user).rejected.where(friend_id: id).to_a
+    received_invitations.includes(:user).rejected.to_a
   end
 
   def inviters
-    Invitation.includes(:user).pending.where(friend_id: id).to_a
+    received_invitations.includes(:user).pending.to_a
   end
 
   def online?
     online_since >= 3.minutes.ago
+  end
+
+  private
+
+  def set_online_since
+    self.online_since = Time.now.utc
   end
 end

@@ -12,24 +12,25 @@ const Offline = styled.div`
 `
 
 const FriendList = (props) => {
-  const [friends, setFriends] = useState([])
+  const [invitations, setInvitations] = useState([])
 
   useEffect(() => {
     axios.get('/api/v1/invitations', {
       params: {user_id: props.userId, type: 'friends'},
       headers: { Authorization: props.userToken }
     })
-      .then((response) => {
-        setFriends(
-          response.data.users
+    .then((response) => {
+      setInvitations(
+        response.data.invitations
         )
       })
-  }, [props.userId, props.userToken])
+    }, [props.userId, props.userToken])
 
-  return (
-    <>
-      {friends.map(friend => (
-        <CollectionItem key={friend.id} className="avatar">
+    const friendRow = (invitation) => {
+      const friend = props.userId === invitation.user_id.toString() ? invitation.friend : invitation.user
+
+      return (
+        <CollectionItem key={invitation.id} className="avatar">
           <img
             alt=""
             className="circle responseve-img"
@@ -40,7 +41,12 @@ const FriendList = (props) => {
           </span>
             { friend.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
         </CollectionItem>
-      ))}
+      )
+    }
+
+  return (
+    <>
+      {invitations.map(friendRow)}
     </>
 )
 }
