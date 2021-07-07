@@ -17,6 +17,7 @@ gem 'pg'
 gem 'puma', '~> 4.1'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.5'
 gem 'sass-rails', '>= 6'
+gem 'sidekiq', '~> 6.2', '>= 6.2.1'
 gem 'webpacker', '~> 4.0'
 
 group :development, :test do
@@ -26,6 +27,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'dotenv-rails', '~> 2.7', '>= 2.7.6'
   gem 'listen', '~> 3.2'
   gem 'rubocop'
   gem 'rubocop-performance'
