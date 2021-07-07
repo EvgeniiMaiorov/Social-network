@@ -42,6 +42,16 @@ const App = () => {
 
     const interval = setInterval(onlineSince, 60000)
 
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords
+
+      axios.patch(
+        '/api/v1/users/location',
+        { location: { latitude, longitude } },
+        { headers: { Authorization: userToken } }
+      )
+    })
+
     return () => {
       if (interval) clearInterval(interval)
     }

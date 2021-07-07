@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Col, Row, MediaBox } from 'react-materialize'
 import axios from 'axios'
 import UserPosts from './UserPosts'
+import GoogleMap from './GoogleMap'
 
 const ProfileInfo = styled.div`
   position: absolute;
@@ -106,7 +107,9 @@ const ProfilePage = (props) => {
           <RecentActivites />
         </Row>
         <Row>
-          <MapWrapper />
+          <MapWrapper>
+            <GoogleMap user={user} />
+          </MapWrapper>
         </Row>
       </Col>
     </Row>

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       resources :users, except: %i[new edit create] do
         patch :update_user_interests, on: :collection
         patch :online_since, on: :collection
+        patch :location, on: :collection
         get :online_status, on: :collection
         resources :posts, shallow: true, except: %i[new edit]
       end
