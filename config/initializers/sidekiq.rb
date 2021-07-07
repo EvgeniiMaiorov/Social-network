@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-redis_url = Rails.application.credentials.redis_url
+redis_url = ENV.fetch('REDIS_URL')
 
 Sidekiq.configure_server do |config|
   config.redis = { url: redis_url }

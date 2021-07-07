@@ -27,6 +27,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'dotenv-rails', '~> 2.7', '>= 2.7.6'
   gem 'listen', '~> 3.2'
   gem 'rubocop'
   gem 'rubocop-performance'
