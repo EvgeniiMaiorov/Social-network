@@ -2,7 +2,9 @@
 
 class Invitation < ApplicationRecord
   belongs_to :user
-  scope :accepted, -> { where(status: 'accepted') }
-  scope :pending, -> { where(status: 'pending') }
-  scope :rejected, -> { where(status: 'rejected') }
+  belongs_to :friend, class_name: 'User'
+
+  enum status: { accepted: 'accepted', pending: 'pending', rejected: 'rejected' }
+
+  validates :user_id, uniqueness: { scope: :friend_id }
 end

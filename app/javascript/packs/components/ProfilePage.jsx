@@ -1,23 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { decodeToken } from 'react-jwt'
 import styled from 'styled-components'
-import { Col, Row, Container, MediaBox } from 'react-materialize'
-import { Link } from 'react-router-dom'
+import { Col, Row, MediaBox } from 'react-materialize'
 import axios from 'axios'
 import UserPosts from './UserPosts'
-
-const PageContainer = styled(Container)`
-  width: 100%;
-  max-width: 1920px;
-  padding: 100px;
-`
-
-const LoginFormWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  height: 105px;
-  background: #FFFFFF;
-`
 
 const ProfileInfo = styled.div`
   position: absolute;
@@ -46,38 +32,6 @@ const MapWrapper = styled.div`
   top: 570px;
   background: #FFFFFF;
   border-radius: 24px;
-`
-
-const LogoTitle = styled.div`
-  display: flex;
-  align-items: center;
-  width: 67px;
-  height: 60px;
-  padding-left: 63px;
-  padding-top: 55px;
-`
-
-const Text = styled.div`
-  font-family: Roboto;
-  font-style: normal;
-  text-align: center;
-  font-size: 20px;
-  line-height: 119.5%;
-  color: #515B60;
-`
-
-const LinksWrapper = styled.div`
-  position: absolute;
-  width: 90px;
-  height: 22px;
-  left: 110px;
-  top: 170px;
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 120%;
-  color: #333333;
 `
 
 const AvatarWrapper = styled.div`
@@ -121,68 +75,41 @@ const ProfilePage = (props) => {
   }, [])
 
   return (
-    <>
-      <LoginFormWrapper>
-        <LogoTitle>
-          <img src="/logo.png" alt="" />
-          <Text>LetsTalk</Text>
-        </LogoTitle>
-      </LoginFormWrapper>
-      <PageContainer>
-        <Col>
-          <LinksWrapper>
-            <Row>
-              <Link to="/users">My page</Link>
-            </Row>
-            <Row>
-              <Link to="/profile_edit">Edit profile</Link>
-            </Row>
-            <Row>
-              <Link to="/news">News</Link>
-            </Row>
-            <Row>
-             <Link to="/messages">Messages</Link>
-            </Row>
-            <Row>
-              <a href="#" onClick={logout}>Logout</a>
-            </Row>
-          </LinksWrapper>
-        </Col>
-        <Col>
-          <ProfileInfo>
-            <Col xl={4}>
-              <AvatarWrapper>
-                <MediaBox className="circle" >
-                  <img
-                    alt=""
-                    src={ user.photo?.url || '/placeholder.png' }
-                    width="160"
-                    height="160"
-                  />
-                </MediaBox>
-              </AvatarWrapper>
-            </Col>
-              <NameWrapper>
-                {user.first_name} {user.last_name}
-              </NameWrapper>
+    <Row>
+      <Col xl={12}>
+        <ProfileInfo>
+          <Col xl={4}>
+            <AvatarWrapper>
+              <MediaBox className="circle" >
+                <img
+                  alt=""
+                  src={ user.photo?.url || '/placeholder.png' }
+                  width="160"
+                  height="160"
+                />
+              </MediaBox>
+            </AvatarWrapper>
+          </Col>
+          <NameWrapper>
+            {user.first_name} {user.last_name}
+          </NameWrapper>
+          <Row>
+            <Col xl={12}>
               <hr />
-            <Row>
-              <Col xl={12}>
-                <UserPosts userToken={props.userToken} userId={user.id} />
-              </Col>
-            </Row>
-          </ProfileInfo>
-        </Col>
-        <Col>
-          <Row>
-            <RecentActivites />
+              <UserPosts userToken={props.userToken} userId={user.id} />
+            </Col>
           </Row>
-          <Row>
-            <MapWrapper />
-          </Row>
-        </Col>
-      </PageContainer>
-    </>
+        </ProfileInfo>
+      </Col>
+      <Col>
+        <Row>
+          <RecentActivites />
+        </Row>
+        <Row>
+          <MapWrapper />
+        </Row>
+      </Col>
+    </Row>
   )
 }
 

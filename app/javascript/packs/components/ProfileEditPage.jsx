@@ -18,7 +18,7 @@ const ProfileFormWrapper = styled.div`
   width: 800px;
   height: 540px;
   left: 450px;
-  top: 101px;
+  top: 150px;
   background: #FFFFFF;
   border-radius: 38px;
 `

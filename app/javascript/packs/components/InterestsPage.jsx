@@ -16,7 +16,7 @@ const LoginFormWrapper = styled.div`
   width: 825px;
   height: 650px;
   left: 450px;
-  top: 101px;
+  top: 150px;
   background: #FFFFFF;
   border-radius: 38px;
 `
