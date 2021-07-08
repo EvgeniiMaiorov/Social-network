@@ -108,7 +108,7 @@ const ProfilePage = (props) => {
         </Row>
         <Row>
           <MapWrapper>
-            <GoogleMap user={user} />
+            <GoogleMap userToken={props.userToken} user={user} />
           </MapWrapper>
         </Row>
       </Col>

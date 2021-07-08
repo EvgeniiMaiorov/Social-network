@@ -36,7 +36,7 @@ class User < ApplicationRecord
   end
 
   def friends
-    own_invitations.includes(:friend).accepted + received_invitations.includes(:user).accepted
+    own_invitations.includes(friend: :interests).accepted + received_invitations.includes(user: :interests).accepted
   end
 
   def subscribers

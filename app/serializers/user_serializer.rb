@@ -6,4 +6,6 @@ class UserSerializer < ActiveModel::Serializer
   attribute :online do
     object.online?
   end
+
+  has_many :interests
 end
