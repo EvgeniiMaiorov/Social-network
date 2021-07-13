@@ -4,6 +4,6 @@ class PublishPostWorker
   include Sidekiq::Worker
 
   def perform(id)
-    puts id
+    Post.find_by(id: id)&.update(published_at: Time.now.utc)
   end
 end

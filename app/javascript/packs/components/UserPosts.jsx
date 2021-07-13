@@ -1,15 +1,26 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
-import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem } from 'react-materialize'
+import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
+import styled from 'styled-components'
 
 
-const postCreateValues = { title: '', body: '', image: '' }
+const postCreateValues = { title: '', body: '', image: '', delay: null }
+
+const Unpublished = styled.span`
+  color: grey;
+  margin-left: 10px;
+`
 
 const UserPosts = (props) => {
   const [posts, setPosts] = useState([])
   const inputFile = useRef(null)
+  const [delay, setDelay] = useState(false)
+
+  const handleDelaySwitch = () => {
+    setDelay(!delay)
+  }
 
   useEffect(() => {
     axios.get(`/api/v1/users/${props.userId}/posts`, { headers: { Authorization: props.userToken } })
@@ -24,6 +35,7 @@ const UserPosts = (props) => {
     formData.append('post[title]', values.title)
     formData.append('post[body]', values.body)
     formData.append('post[image]', values.image)
+    if (values.delay) formData.append('delay', values.delay)
     axios.post(`/api/v1/users/${props.userId}/posts`, formData, { headers: { Authorization: props.userToken } })
     .then((response) => {
       setSubmitting(false)
@@ -49,7 +61,13 @@ const UserPosts = (props) => {
       .max(50, 'Name is too long!')
       .required('This field is required'),
     body: Yup.string()
-      .required('This field is required')
+      .required('This field is required'),
+    delay: Yup.number()
+      .integer()
+      .nullable(true)
+      .typeError('you must specify a number')
+      .max(24, 'Max 24 hours')
+      .min(1, 'Min 1 hour')
   })
 
   return (
@@ -93,11 +111,46 @@ const UserPosts = (props) => {
                     as={Textarea}
                     xl={12}
                   />
+                  { delay && (
+                  <Field
+                    className={ touched.delay && errors.delay ? 'invalid' : 'valid'}
+                    error={errors.delay}
+                    name="delay"
+                    label="Delay"
+                    type="number"
+                    min="1"
+                    max="24"
+                    value={String(values.delay)}
+                    as={TextInput}
+                    xl={12}
+                  />
+                  )}
+                  <div className="input-field col">
+                    <Row>
+                      <Col>
+                        <span>Show delay</span>
+                      </Col>
+                      <Col>
+                        <Switch
+                          id="Switch-11"
+                          offLabel="Off"
+                          checked={delay}
+                          onLabel="On"
+                          onClick={handleDelaySwitch}
+                        />
+                      </Col>
+                    </Row>
+                  </div>
                 </Col>
               </Row>
               <Row>
                 <Col offset="s5">
-                  <Button type="submit" disabled={isSubmitting}>Create post</Button>
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting || Object.keys(touched).some((key) => errors[key])}
+                    >
+                      Create post
+                    </Button>
                 </Col>
               </Row>
             </Form>
@@ -119,6 +172,9 @@ const UserPosts = (props) => {
                 )}
                 <span className="title" style={{fontWeight: 'bold'}}>
                   { post.title }
+                </span>
+                <span>
+                  { !post.published_at && <Unpublished>(Unpublished)</Unpublished> }
                 </span>
                 <p>
                   { post.body }
