@@ -29,6 +29,8 @@ const GoogleMap = (props) => {
         {invitations.map((invitation) => {
           const friend = props.user.id === invitation.user_id ? invitation.friend : invitation.user
 
+          if (!friend.online) return null
+
           return (
             <GoogleMarker
               key={friend.id}
