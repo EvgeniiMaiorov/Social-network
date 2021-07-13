@@ -29,7 +29,7 @@ const Marker = (props) => {
     >
       <ReactTooltip id={`location-${props.friendId}`} >
         <Content>
-         <div>{`${props.firstName} ${props.lastName}`}</div>
+          <div>{`${props.firstName} ${props.lastName}`}</div>
           <Row>
             {props.friendInterests.map((interest) => (
               <Col key={interest.id} xl={4}>
