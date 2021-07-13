@@ -6,7 +6,9 @@ module Api
       before_action :find_post, only: %i[update destroy]
 
       def index
-        posts = Post.where(user_id: params[:user_id]).order(id: :desc)
+        posts = Post.where(user_id: params[:user_id]).order(published_at: :desc)
+
+        posts = posts.published if current_user.id != params[:user_id].to_i
 
         render json: posts
       end
@@ -20,7 +22,11 @@ module Api
       def create
         post = current_user.posts.build(post_params)
 
+        post.published_at = Time.now.utc unless params[:delay]
+
         if post.save
+          PublishPostWorker.perform_in(params[:delay].to_i.hours, post.id) if params[:delay]
+
           render json: post
         else
           render json: { error: post.errors.messages }, status: :unprocessable_entity
