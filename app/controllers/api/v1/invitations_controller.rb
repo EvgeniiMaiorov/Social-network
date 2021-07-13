@@ -21,7 +21,7 @@ module Api
             return
           end
 
-        render json: invitations
+        render json: invitations, include: { user: :interests, friend: :interests }, root: 'invitations'
       end
 
       def create
