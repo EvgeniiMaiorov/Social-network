@@ -6,9 +6,30 @@ module Api
       before_action :find_user, only: %i[show update destroy online_status]
 
       def index
-        users = User.all
+        users =
+          case params[:type]
+          when '90_percent'
+            user_by_interest(90)
+          when '50_percent'
+            user_by_interest(50)
+          when 'online_friends'
+            current_user.friends.map do |invitation|
+              friend =
+                if invitation.user_id == current_user.id
+                  invitation.friend
+                else
+                  invitation.user
+                end
 
-        render json: users
+              friend if friend.online?
+            end.compact
+          else
+            render json: { error: 'Missing type param' }, status: :bad_request
+
+            return
+          end
+
+        render json: users, root: 'users'
       end
 
       def show
@@ -54,6 +75,21 @@ module Api
       end
 
       private
+
+      def user_by_interest(percent)
+        current_user_interests = current_user.user_interests.pluck('ARRAY_AGG(interest_id)').flatten
+        user_ids =
+          UserInterest.group(:user_id)
+                      .where.not(user_id: current_user.id)
+                      .select('user_id, ARRAY_AGG(interest_id) as interest_ids')
+                      .select do |user_interest|
+                        intersection = user_interest.interest_ids.intersection(current_user_interests).count
+
+                        intersection > current_user_interests.count / 100.0 * percent
+                      end.map(&:user_id)
+
+        User.where(id: user_ids)
+      end
 
       def user_params
         params.require(:user).permit(:first_name, :last_name, :email, :photo)
