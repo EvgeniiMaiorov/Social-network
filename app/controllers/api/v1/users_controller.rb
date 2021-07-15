@@ -77,18 +77,17 @@ module Api
       private
 
       def user_by_interest(percent)
-        current_user_interests = current_user.user_interests.pluck('ARRAY_AGG(interest_id)').flatten
-        user_ids =
-          UserInterest.group(:user_id)
-                      .where.not(user_id: current_user.id)
-                      .select('user_id, ARRAY_AGG(interest_id) as interest_ids')
-                      .select do |user_interest|
-                        intersection = user_interest.interest_ids.intersection(current_user_interests).count
+        current_user_interests = current_user.user_interests.pluck(:interest_id)
+        UserInterest.where(interest_id: current_user_interests)
+                    .includes(:user)
+                    .group(:user_id)
+                    .where.not(user_id: current_user.id)
+                    .select('user_id, ARRAY_AGG(interest_id) as interest_ids')
+                    .select do |user_interest|
+                      intersection = user_interest.interest_ids.intersection(current_user_interests).count
 
-                        intersection > current_user_interests.count / 100.0 * percent
-                      end.map(&:user_id)
-
-        User.where(id: user_ids)
+                      intersection > current_user_interests.count / 100.0 * percent
+                    end.map(&:user)
       end
 
       def user_params
