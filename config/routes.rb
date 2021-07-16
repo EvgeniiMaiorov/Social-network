@@ -28,7 +28,9 @@ Rails.application.routes.draw do
         patch :online_since, on: :collection
         patch :location, on: :collection
         get :online_status, on: :collection
-        resources :posts, shallow: true, except: %i[new edit]
+        resources :posts, shallow: true, except: %i[new edit] do
+          resources :comments, shallow: true
+        end
       end
 
       resources :interest_categories, only: [:index]

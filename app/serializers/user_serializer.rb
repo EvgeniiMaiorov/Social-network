@@ -8,4 +8,5 @@ class UserSerializer < ActiveModel::Serializer
   end
 
   has_many :interests
+  has_many :comments
 end

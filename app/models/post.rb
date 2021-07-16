@@ -2,6 +2,7 @@
 
 class Post < ApplicationRecord
   belongs_to :user
+  has_many :comments, dependent: :destroy
 
   scope :published, -> { where.not(published_at: nil) }
 
