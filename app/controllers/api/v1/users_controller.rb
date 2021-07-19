@@ -6,9 +6,30 @@ module Api
       before_action :find_user, only: %i[show update destroy online_status]
 
       def index
-        users = User.all
+        users =
+          case params[:type]
+          when '90_percent'
+            current_user.user_by_interest(90)
+          when '50_percent'
+            current_user.user_by_interest(50)
+          when 'online_friends'
+            current_user.friends.map do |invitation|
+              friend =
+                if invitation.user_id == current_user.id
+                  invitation.friend
+                else
+                  invitation.user
+                end
 
-        render json: users
+              friend if friend.online?
+            end.compact
+          else
+            render json: { error: 'Missing type param' }, status: :bad_request
+
+            return
+          end
+
+        render json: users, root: 'users'
       end
 
       def show
