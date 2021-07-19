@@ -51,6 +51,20 @@ class User < ApplicationRecord
     online_since >= 3.minutes.ago
   end
 
+  def user_by_interest(percent)
+    current_user_interests = user_interests.pluck(:interest_id)
+    UserInterest.where(interest_id: current_user_interests)
+                .includes(:user)
+                .group(:user_id)
+                .where.not(user_id: id)
+                .select('user_id, ARRAY_AGG(interest_id) as interest_ids')
+                .select do |user_interest|
+                  intersection = user_interest.interest_ids.intersection(current_user_interests).count
+
+                  intersection > current_user_interests.count / 100.0 * percent
+                end.map(&:user)
+  end
+
   private
 
   def set_online_since
