@@ -22,13 +22,13 @@ module Api
       def create
         post = current_user.posts.build(post_params)
 
-        handle_response(post)
+        handle_update(post)
       end
 
       def update
         @post.assign_attributes(post_params)
 
-        handle_response(@post)
+        handle_update(@post)
       end
 
       def destroy
@@ -51,11 +51,11 @@ module Api
         render json: { error: 'Post not found' }, status: :not_found unless @post
       end
 
-      def handle_response(post)
+      def handle_update(post)
         result = UpdatePostService.new(post, params).call
 
         if result.success?
-          render json: result.result
+          render json: result.post
         else
           render json: { error: result.errors }, status: :unprocessable_entity
         end

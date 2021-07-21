@@ -14,7 +14,7 @@ class UpdatePostService
 
     if post.save
       PublishPostWorker.perform_in(params[:delay].to_i.hours, post.id) if params[:delay]
-      OpenStruct.new(success?: true, result: post)
+      OpenStruct.new(success?: true, post: post)
     else
       OpenStruct.new(success?: false, errors: post.errors.messages)
     end
