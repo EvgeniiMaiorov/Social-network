@@ -22,23 +22,13 @@ module Api
       def create
         post = current_user.posts.build(post_params)
 
-        post.published_at = Time.now.utc unless params[:delay]
-
-        if post.save
-          PublishPostWorker.perform_in(params[:delay].to_i.hours, post.id) if params[:delay]
-
-          render json: post
-        else
-          render json: { error: post.errors.messages }, status: :unprocessable_entity
-        end
+        handle_update(post)
       end
 
       def update
-        if @post.update(post_params)
-          render json: @post
-        else
-          render json: { error: @post.errors.messages }, status: :unprocessable_entity
-        end
+        @post.assign_attributes(post_params)
+
+        handle_update(@post)
       end
 
       def destroy
@@ -59,6 +49,16 @@ module Api
         @post = current_user.posts.find_by(id: params[:id])
 
         render json: { error: 'Post not found' }, status: :not_found unless @post
+      end
+
+      def handle_update(post)
+        result = UpdatePostService.new(post, params).call
+
+        if result.success?
+          render json: result.post
+        else
+          render json: { error: result.errors }, status: :unprocessable_entity
+        end
       end
     end
   end

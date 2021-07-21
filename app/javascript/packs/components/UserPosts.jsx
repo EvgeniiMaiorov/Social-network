@@ -36,6 +36,7 @@ const UserPosts = (props) => {
     formData.append('post[body]', values.body)
     formData.append('post[image]', values.image)
     if (values.delay) formData.append('delay', values.delay)
+    formData.append('tags[]', 'test')
     axios.post(`/api/v1/users/${props.userId}/posts`, formData, { headers: { Authorization: props.userToken } })
     .then((response) => {
       setSubmitting(false)

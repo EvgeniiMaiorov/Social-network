@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_16_102107) do
+ActiveRecord::Schema.define(version: 2021_07_19_201336) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "intarray"
@@ -91,6 +91,17 @@ ActiveRecord::Schema.define(version: 2021_07_16_102107) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "published_at"
     t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "posts_tags", id: false, force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["post_id", "tag_id"], name: "index_posts_tags_on_post_id_and_tag_id", unique: true
+    t.index ["tag_id"], name: "index_posts_tags_on_tag_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
   end
 
   create_table "user_interests", force: :cascade do |t|
