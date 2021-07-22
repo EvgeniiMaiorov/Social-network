@@ -17,43 +17,39 @@ const PendingFriendship = (props) => {
 
   useEffect(() => {
     axios.get('/api/v1/invitations', {
-      params: {user_id: props.userId, type: 'inviters'},
-      headers: { Authorization: props.userToken }
+      params: { user_id: props.userId, type: 'inviters' },
+      headers: { Authorization: props.userToken },
     })
       .then((response) => {
         setInvitations(response.data.invitations)
       })
   }, [props.userId, props.userToken, props.reload])
 
-  const makeFriend = (invitation) => {
-    return () => {
-      axios.patch(
-        `/api/v1/invitations/${invitation.id}/accept`,
-        { friend_id: props.userId, user_id: invitation.user_id },
-        { headers: { Authorization: props.userToken }
+  const makeFriend = (invitation) => () => {
+    axios.patch(
+      `/api/v1/invitations/${invitation.id}/accept`,
+      { friend_id: props.userId, user_id: invitation.user_id },
+      { headers: { Authorization: props.userToken } },
+    )
+      .then(() => {
+        props.setReload((reload) => ++reload)
       })
-        .then(() => {
-          props.setReload((reload) => ++reload)
-        })
-    }
   }
 
-  const makeSubscriber = (invitation) => {
-    return () => {
-      axios.patch(
-        `/api/v1/invitations/${invitation.id}/reject`,
-        { friend_id: props.userId, user_id: invitation.user_id },
-        { headers: { Authorization: props.userToken }
+  const makeSubscriber = (invitation) => () => {
+    axios.patch(
+      `/api/v1/invitations/${invitation.id}/reject`,
+      { friend_id: props.userId, user_id: invitation.user_id },
+      { headers: { Authorization: props.userToken } },
+    )
+      .then(() => {
+        props.setReload((reload) => ++reload)
       })
-        .then(() => {
-          props.setReload((reload) => ++reload)
-        })
-    }
   }
 
   return (
     <>
-      {invitations.map(invitation => (
+      {invitations.map((invitation) => (
         <CollectionItem key={invitation.id} className="avatar">
           <Link to={`/users/${invitation.user_id}`}>
             <img
@@ -77,6 +73,5 @@ const PendingFriendship = (props) => {
     </>
   )
 }
-
 
 export default PendingFriendship

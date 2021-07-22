@@ -30,16 +30,31 @@ const FriendsPage = (props) => {
       <Row>
         <Col xl={12}>
           <Tabs>
-            <Tab title="Friends" >
+            <Tab title="Friends">
               <Collection>
-                <PendingFriendship reload={reload} setReload={setReload} userToken={props.userToken} userId={props.userId} />
+                <PendingFriendship
+                  reload={reload}
+                  setReload={setReload}
+                  userToken={props.userToken}
+                  userId={props.userId}
+                />
                 <br />
-                <FriendList reload={reload} setReload={setReload} userToken={props.userToken} userId={props.userId} />
+                <FriendList
+                  reload={reload}
+                  setReload={setReload}
+                  userToken={props.userToken}
+                  userId={props.userId}
+                />
               </Collection>
             </Tab>
-            <Tab title="Subscriders" >
+            <Tab title="Subscriders">
               <Collection>
-                <SubscriberList reload={reload} setReload={setReload} userToken={props.userToken} userId={props.userId} />
+                <SubscriberList
+                  reload={reload}
+                  setReload={setReload}
+                  userToken={props.userToken}
+                  userId={props.userId}
+                />
               </Collection>
             </Tab>
           </Tabs>
