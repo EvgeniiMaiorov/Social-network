@@ -27,4 +27,4 @@ test:
 
 production:
   <<: *default
-  database: SNDatabase_prod
+  url: <%= ENV['DATABASE_URL'] %>
