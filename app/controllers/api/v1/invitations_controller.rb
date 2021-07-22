@@ -3,8 +3,8 @@
 module Api
   module V1
     class InvitationsController < Api::V1::ApplicationController
-      before_action :find_user, only: %i[create index accept reject]
-      before_action :find_friend, only: [:create]
+      before_action :find_user, only: %i[create index]
+      before_action :find_friend, only: %i[create accept reject]
 
       def index
         invitations =
@@ -35,7 +35,7 @@ module Api
       end
 
       def accept
-        invitation = @user.received_invitations.find(params[:id])
+        invitation = @friend.received_invitations.find(params[:id])
 
         if invitation.update(status: 'accepted')
           render json: invitation
@@ -45,7 +45,7 @@ module Api
       end
 
       def reject
-        invitation = @user.received_invitations.find(params[:id])
+        invitation = @friend.received_invitations.find(params[:id])
 
         if invitation.update(status: 'rejected')
           render json: invitation
