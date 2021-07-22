@@ -19,9 +19,6 @@ const Image = styled.img`
   position: relative;
 `
 
-const Line = styled.br`
-`
-
 const FriendsPage = (props) => {
   const [reload, setReload] = useState(1)
 
@@ -41,7 +38,7 @@ const FriendsPage = (props) => {
                   userToken={props.userToken}
                   userId={props.userId}
                 />
-                <Line />
+                <br />
                 <FriendList
                   reload={reload}
                   setReload={setReload}
