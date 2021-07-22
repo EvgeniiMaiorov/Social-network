@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Col, Row, Collection, Tab, Tabs } from 'react-materialize'
 import FriendList from './FriendList'
@@ -20,8 +20,9 @@ const Image = styled.img`
 `
 
 const FriendsPage = (props) => {
+  const [reload, setReload] = useState(1)
 
- return (
+  return (
     <>
       <ImageWrapper>
         <Image src="/rafiki.png" />
@@ -29,16 +30,31 @@ const FriendsPage = (props) => {
       <Row>
         <Col xl={12}>
           <Tabs>
-            <Tab title="Friends" >
+            <Tab title="Friends">
               <Collection>
-                <PendingFriendship userToken={props.userToken} userId={props.userId} />
-                  <br />
-                <FriendList userToken={props.userToken} userId={props.userId} />
+                <PendingFriendship
+                  reload={reload}
+                  setReload={setReload}
+                  userToken={props.userToken}
+                  userId={props.userId}
+                />
+                <br />
+                <FriendList
+                  reload={reload}
+                  setReload={setReload}
+                  userToken={props.userToken}
+                  userId={props.userId}
+                />
               </Collection>
             </Tab>
-            <Tab title="Subscriders" >
+            <Tab title="Subscriders">
               <Collection>
-                <SubscriberList userToken={props.userToken} userId={props.userId} />
+                <SubscriberList
+                  reload={reload}
+                  setReload={setReload}
+                  userToken={props.userToken}
+                  userId={props.userId}
+                />
               </Collection>
             </Tab>
           </Tabs>
