@@ -3,7 +3,7 @@
 module Api
   module V1
     class InvitationsController < Api::V1::ApplicationController
-      before_action :find_user, only: %i[create index]
+      before_action :find_user, only: %i[create index destroy]
       before_action :find_friend, only: %i[create accept reject]
 
       def index
@@ -34,6 +34,16 @@ module Api
         end
       end
 
+      def destroy
+        invitation = @user.own_invitations.find(params[:id])
+
+        if invitation.destroy
+          head :no_content
+        else
+          render json: { error: invitation.errors.messages }, status: :unprocessable_entity
+        end
+      end
+
       def accept
         invitation = @friend.received_invitations.find(params[:id])
 
@@ -46,6 +56,10 @@ module Api
 
       def reject
         invitation = @friend.received_invitations.find(params[:id])
+
+        if current_user.id == invitation.user_id
+          invitation.user_id, invitation.friend_id = invitation.friend_id, invitation.user_id
+        end
 
         if invitation.update(status: 'rejected')
           render json: invitation

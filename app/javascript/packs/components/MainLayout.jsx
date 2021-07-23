@@ -41,17 +41,17 @@ const MainLayout = (props) => {
   const logout = (e) => {
     e.preventDefault()
 
-    axios.delete(`/users/sign_out`, { headers: { Authorization: props.userToken } })
-    .then(() => {
-      props.logoutHandler()
-    })
+    axios.delete('/users/sign_out', { headers: { Authorization: props.userToken } })
+      .then(() => {
+        props.logoutHandler()
+      })
   }
 
   return (
     <>
       <Row>
-        <Col xl={12} >
-          <Navbar style={{background: 'white'}}>
+        <Col xl={12}>
+          <Navbar style={{ background: 'white' }}>
             <LogoTitle>
               <img src="/logo.png" alt="" />
               <Text>LetsTalk</Text>
@@ -95,11 +95,13 @@ const MainLayout = (props) => {
                 <Route path="/profile_edit">
                   <ProfileEditPage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
-                <Route path="/users">
+                <Route exact path="/users">
                   <ProfilePage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
-                <Route render={() => <Redirect to="/users" />} path="*">
+                <Route path="/users/:userId">
+                  <ProfilePage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
+                <Route render={() => <Redirect to="/users" />} path="*" />
               </Switch>
             ) }
           </ContentWrapper>
