@@ -3,14 +3,14 @@
 module Api
   module V1
     class PostsController < Api::V1::ApplicationController
-      before_action :find_post, only: %i[update destroy]
+      before_action :find_post, only: %i[update destroy like]
 
       def index
         posts = Post.where(user_id: params[:user_id]).order(published_at: :desc)
 
         posts = posts.published if current_user.id != params[:user_id].to_i
 
-        render json: posts
+        render json: posts, current_user: current_user
       end
 
       def show
@@ -36,6 +36,17 @@ module Api
           head :no_content
         else
           render json: { error: @post.errors.messages }, status: :unprocessable_entity
+        end
+      end
+
+      def like
+        like = @post.likes.find_or_initialize_by(user_id: current_user.id)
+        like.status = params[:status]
+
+        if like.save
+          render json: @post, current_user: current_user
+        else
+          render json: { error: like.errors.messages }, status: :unprocessable_entity
         end
       end
 

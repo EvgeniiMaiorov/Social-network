@@ -29,6 +29,7 @@ Rails.application.routes.draw do
         patch :location, on: :collection
         get :online_status, on: :collection
         resources :posts, shallow: true, except: %i[new edit] do
+          post :like, on: :member
           resources :comments, shallow: true
         end
       end

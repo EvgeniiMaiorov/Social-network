@@ -5,4 +5,16 @@ class PostSerializer < ActiveModel::Serializer
 
   has_many :comments
   has_many :tags
+
+  attribute :like_count do
+    object.likes.liked.count
+  end
+
+  attribute :dislike_count do
+    object.likes.disliked.count
+  end
+
+  attribute :like, if: -> { instance_options[:current_user] } do
+    object.likes.find_by(user_id: instance_options[:current_user].id)
+  end
 end
