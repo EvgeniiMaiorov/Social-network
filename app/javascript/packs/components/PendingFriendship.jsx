@@ -48,7 +48,7 @@ const PendingFriendship = (props) => {
   }
 
   return (
-    <>
+    <div style={{ marginBottom: '50px' }}>
       {invitations.map((invitation) => (
         <CollectionItem key={invitation.id} className="avatar">
           <Link to={`/users/${invitation.user_id}`}>
@@ -70,7 +70,7 @@ const PendingFriendship = (props) => {
           </Col>
         </CollectionItem>
       ))}
-    </>
+    </div>
   )
 }
 

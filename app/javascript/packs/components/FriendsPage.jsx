@@ -38,7 +38,6 @@ const FriendsPage = (props) => {
                   userToken={props.userToken}
                   userId={props.userId}
                 />
-                <br />
                 <FriendList
                   reload={reload}
                   setReload={setReload}
