@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import ReactTooltip from "react-tooltip"
+import ReactTooltip from 'react-tooltip'
 import { Col, Row } from 'react-materialize'
 
 const Interest = styled.div`
-  color: ${(props) => props.crossed ? 'yellow' : 'white' };
+  color: ${(props) => (props.crossed ? 'yellow' : 'white')};
 `
 
 const Content = styled.div`
@@ -16,9 +16,9 @@ const Content = styled.div`
 `
 
 const Marker = (props) => {
-  const crossed = (friendInterestId) => {
-    return props.currentUserInterests.some((userInterest) => friendInterestId === userInterest.id)
-  }
+  const crossed = (friendInterestId) => (
+    props.currentUserInterests.some((userInterest) => friendInterestId === userInterest.id)
+  )
 
   return (
     <div
@@ -26,8 +26,9 @@ const Marker = (props) => {
       data-for={`location-${props.friendId}`}
       className={props.className}
       onClick={props.onClick}
+      aria-hidden="true"
     >
-      <ReactTooltip id={`location-${props.friendId}`} >
+      <ReactTooltip id={`location-${props.friendId}`}>
         <Content>
           <div>{`${props.firstName} ${props.lastName}`}</div>
           <Row>
@@ -39,11 +40,13 @@ const Marker = (props) => {
           </Row>
         </Content>
       </ReactTooltip>
-      <Link to="/friends/12">
-        <img className="circle responseve-img"
-          src={ props.photo || '/placeholder.png' }
+      <Link to={`/users/${props.friendId}`}>
+        <img
+          className="circle responseve-img"
+          src={props.photo || '/placeholder.png'}
           width="100%"
           height="100%"
+          alt=""
         />
       </Link>
     </div>

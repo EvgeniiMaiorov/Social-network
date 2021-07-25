@@ -33,7 +33,7 @@ module Api
       end
 
       def show
-        render json: @user
+        render json: @user, current_user: current_user
       end
 
       def update

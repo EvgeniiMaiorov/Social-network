@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { decodeToken } from 'react-jwt'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { Col, Row, MediaBox } from 'react-materialize'
+import { Col, Row, MediaBox, Button } from 'react-materialize'
 import axios from 'axios'
 import UserPosts from './UserPosts'
 import GoogleMap from './GoogleMap'
+import InvitationButtons from './InvitationButtons'
 
 const ProfileInfo = styled.div`
   position: absolute;
@@ -55,25 +56,15 @@ const NameWrapper = styled.div`
 `
 
 const ProfilePage = (props) => {
+  const { userId } = useParams()
   const [user, setUser] = useState({})
 
-  const logout = (e) => {
-    e.preventDefault()
-
-    axios.delete(`/users/sign_out`, { headers: { Authorization: props.userToken } })
-    .then(() => {
-      props.logoutHandler()
-    })
-  }
-
   useEffect(() => {
-    const decodedUserToken = decodeToken(props.userToken)
-
-    axios.get(`/api/v1/users/${decodedUserToken.sub}`, { headers: { Authorization: props.userToken } })
-    .then((response) => {
-      setUser(response.data.user)
-    })
-  }, [])
+    axios.get(`/api/v1/users/${userId || props.userId}`, { headers: { Authorization: props.userToken } })
+      .then((response) => {
+        setUser(response.data.user)
+      })
+  }, [userId, props.userId, props.userToken])
 
   return (
     <Row>
@@ -81,23 +72,28 @@ const ProfilePage = (props) => {
         <ProfileInfo>
           <Col xl={4}>
             <AvatarWrapper>
-              <MediaBox className="circle" >
+              <MediaBox className="circle">
                 <img
                   alt=""
-                  src={ user.photo?.url || '/placeholder.png' }
+                  src={user.photo?.url || '/placeholder.png'}
                   width="160"
                   height="160"
                 />
               </MediaBox>
             </AvatarWrapper>
           </Col>
-          <NameWrapper>
-            {user.first_name} {user.last_name}
-          </NameWrapper>
+          <Col xl={8}>
+            <NameWrapper>
+              {user.first_name} {user.last_name}
+            </NameWrapper>
+          </Col>
+          { userId && userId !== props.userId && (
+            <InvitationButtons user={user} userId={props.userId} setUser={setUser} userToken={props.userToken} />
+          )}
           <Row>
             <Col xl={12}>
               <hr />
-              <UserPosts userToken={props.userToken} userId={user.id} />
+              <UserPosts userToken={props.userToken} userId={user.id} showForm={!userId} />
             </Col>
           </Row>
         </ProfileInfo>
@@ -106,11 +102,13 @@ const ProfilePage = (props) => {
         <Row>
           <RecentActivites />
         </Row>
-        <Row>
-          <MapWrapper>
-            <GoogleMap userToken={props.userToken} user={user} />
-          </MapWrapper>
-        </Row>
+        { !userId && (
+          <Row>
+            <MapWrapper>
+              <GoogleMap userToken={props.userToken} user={user} />
+            </MapWrapper>
+          </Row>
+        )}
       </Col>
     </Row>
   )
