@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
-import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch } from 'react-materialize'
+import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -12,10 +12,33 @@ const Unpublished = styled.span`
   margin-left: 10px;
 `
 
+const Liked = styled.div`
+  color: ${(props) => props.liked ? 'green' : 'black' };
+`
+
+const Disliked = styled.div`
+  color: ${(props) => props.disliked ? 'red' : 'black' };
+`
+
 const UserPosts = (props) => {
   const [posts, setPosts] = useState([])
   const inputFile = useRef(null)
   const [delay, setDelay] = useState(false)
+
+  const saveLike = (post, status) => () => {
+    axios.post(
+      `/api/v1/posts/${post.id}/like`,
+      { status },
+      { headers: { Authorization: props.userToken } },
+    )
+      .then((response) => {
+        setPosts((posts) => (
+          posts.map((post) => (
+            post.id === response.data.post.id ? response.data.post : post
+          ))
+        ))
+      })
+  }
 
   const handleDelaySwitch = () => {
     setDelay(!delay)
@@ -187,6 +210,14 @@ const UserPosts = (props) => {
                 <p>
                   { post.body }
                 </p>
+                <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
+                  thumb_up
+                </Icon>
+                  <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
+                <Icon style={{ color: 'red', cursor: 'pointer' }} tiny onClick={saveLike(post, 'dislike')}>
+                  thumb_down
+                </Icon>
+                  <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
               </CollectionItem>
             ))}
           </Collection>
