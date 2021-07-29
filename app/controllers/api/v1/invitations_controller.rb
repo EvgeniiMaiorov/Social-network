@@ -71,11 +71,15 @@ module Api
       private
 
       def find_friend
-        @friend ||= User.find params[:friend_id]
+        @friend = User.find_by(id: params[:friend_id])
+
+        render json: { error: 'Friend not found' }, status: :not_found unless @friend
       end
 
       def find_user
-        @user ||= User.find params[:user_id]
+        @user = User.find_by(id: params[:user_id])
+
+        render json: { error: 'User not found' }, status: :not_found unless @user
       end
     end
   end

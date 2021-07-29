@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { Col, Row, MediaBox, Button } from 'react-materialize'
+import { Col, Row, MediaBox } from 'react-materialize'
 import axios from 'axios'
 import UserPosts from './UserPosts'
 import GoogleMap from './GoogleMap'

@@ -2,10 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
-import { useHistory } from 'react-router-dom'
+import { useHistory, Link } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -98,12 +97,12 @@ const LogInPage = (props) => {
     setSubmitting(true)
 
     axios.post('/users/sign_in', { user: values })
-    .then((response) => {
-      setSubmitting(false)
-      props.loginHandler(response.headers.authorization)
-    }).catch((error) => {
-      setSubmitting(false)
-    })
+      .then((response) => {
+        setSubmitting(false)
+        props.loginHandler(response.headers.authorization)
+      }).catch(() => {
+        setSubmitting(false)
+      })
   }
 
   const validateValues = (values) => {
@@ -123,20 +122,21 @@ const LogInPage = (props) => {
   }
 
   const responseGoogle = (response) => {
-    axios.post('/users/auth/google_oauth2/callback', response.tokenObj, {headers: {
-      'Authorization': `Bearer ${response.tokenObj.accessToken}`,
-      'Content-Type': 'application/json',
-      'access_token': response.tokenObj.accessToken
-    }})
-    .then((response) => {
-      props.loginHandler(response.headers.authorization)
+    axios.post(
+      '/users/auth/google_oauth2/callback',
+      response.tokenObj,
+      { headers: { Authorization: `Bearer ${response.tokenObj.accessToken}`,
+        'Content-Type': 'application/json',
+        access_token: response.tokenObj.accessToken } },
+    )
+      .then((response) => {
+        props.loginHandler(response.headers.authorization)
 
-      if (!response.data.persisted) {
-        history.push('/interests')
-      }
-    })
+        if (!response.data.persisted) {
+          history.push('/interests')
+        }
+      })
   }
-
 
   return (
     <PageContainer>
@@ -183,8 +183,7 @@ const LogInPage = (props) => {
                       onSuccess={responseGoogle}
                       onFailure={(response) => console.log('response >> ', response)}
                       prompt="select_account"
-                      >
-                    </GoogleLogin>
+                    />
                   </GoogleLoginWrapper>
                   <SignUpLink>
                     <Col xl={12}>

@@ -4,6 +4,7 @@ import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Swit
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import styled from 'styled-components'
+import Comments from './Comments'
 
 const postCreateValues = { title: '', body: '', image: '', delay: null }
 
@@ -12,12 +13,18 @@ const Unpublished = styled.span`
   margin-left: 10px;
 `
 
-const Liked = styled.div`
-  color: ${(props) => props.liked ? 'green' : 'black' };
+const Liked = styled.span`
+  color: ${(props) => (props.liked ? 'green' : 'black')};
 `
 
-const Disliked = styled.div`
-  color: ${(props) => props.disliked ? 'red' : 'black' };
+const Disliked = styled.span`
+  color: ${(props) => (props.disliked ? 'red' : 'black')};
+`
+
+const CommentEditInput = styled(TextInput)`
+  width: 100%;
+  text-indent: 30px;
+  height: 40px;
 `
 
 const UserPosts = (props) => {
@@ -143,7 +150,7 @@ const UserPosts = (props) => {
                       />
                       { delay && (
                       <Field
-                        className={ touched.delay && errors.delay ? 'invalid' : 'valid'}
+                        className={touched.delay && errors.delay ? 'invalid' : 'valid'}
                         error={errors.delay}
                         name="delay"
                         label="Delay"
@@ -210,14 +217,15 @@ const UserPosts = (props) => {
                 <p>
                   { post.body }
                 </p>
+                <Comments postId={post.id} userToken={props.userToken} comments={post.comments} />
                 <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
                   thumb_up
                 </Icon>
-                  <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
+                <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
                 <Icon style={{ color: 'red', cursor: 'pointer' }} tiny onClick={saveLike(post, 'dislike')}>
                   thumb_down
                 </Icon>
-                  <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
+                <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
               </CollectionItem>
             ))}
           </Collection>

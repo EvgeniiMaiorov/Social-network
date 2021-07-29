@@ -96,12 +96,12 @@ const ProfileEditPage = (props) => {
   const inputFile = useRef(null)
 
   useEffect(() => {
-    if(!decodedToken) return
+    if (!decodedToken) return
     axios.get(`/api/v1/users/${decodedToken.sub}`, { headers: { Authorization: props.userToken } })
-    .then((response) => {
-      setUser(response.data.user)
-      setLoading(false)
-    })
+      .then((response) => {
+        setUser(response.data.user)
+        setLoading(false)
+      })
   }, [decodedToken])
 
   const onSubmit = (values, { setSubmitting }) => {
@@ -111,22 +111,20 @@ const ProfileEditPage = (props) => {
     formData.append('user[last_name]', values.last_name)
     if (values.photo) formData.append('user[photo]', values.photo)
     axios.patch(`/api/v1/users/${decodedToken.sub}`, formData, { headers: { Authorization: props.userToken } })
-    .then((response) => {
-      setSubmitting(false)
-      history.push('/users')
-    }).catch((error) => {
-      setSubmitting(false)
-    })
+      .then(() => {
+        setSubmitting(false)
+        history.push('/users')
+      }).catch(() => {
+        setSubmitting(false)
+      })
   }
 
   const onClick = () => {
     inputFile.current.click()
   }
 
-  const onPhotoChange = (setFieldValue) => {
-    return (event) => {
-      setFieldValue("photo", event.currentTarget.files[0])
-    }
+  const onPhotoChange = (setFieldValue) => (event) => {
+    setFieldValue('photo', event.currentTarget.files[0])
   }
 
   const profileEditSchema = Yup.object().shape({
@@ -176,7 +174,14 @@ const ProfileEditPage = (props) => {
                   <Col xl={12}>
                     <EditPhotoText onClick={onClick}>Edit photo</EditPhotoText>
                   </Col>
-                  <input accept="image/*" type='file' name='photo' ref={inputFile} style={{display: 'none'}} onChange={onPhotoChange(setFieldValue)} />
+                  <input
+                    accept="image/*"
+                    type="file"
+                    name="photo"
+                    ref={inputFile}
+                    style={{ display: 'none' }}
+                    onChange={onPhotoChange(setFieldValue)}
+                  />
                   <Row>
                     <Col offset="s6">
                       <Field

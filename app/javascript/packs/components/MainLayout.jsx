@@ -69,13 +69,10 @@ const MainLayout = (props) => {
               <Link to="/profile_edit">Edit profile</Link>
             </Row>
             <Row>
-              <Link to="/news">News</Link>
+              <Link to="/interests">Interests</Link>
             </Row>
             <Row>
               <Link to="/friends">Friends</Link>
-            </Row>
-            <Row>
-              <Link to="/messages">Messages</Link>
             </Row>
             <Row>
               <a href="#" onClick={logout}>Logout</a>

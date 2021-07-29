@@ -85,7 +85,9 @@ const UploadPhotoText = styled.div`
   cursor: pointer;
 `
 
-const signUpInitialValues = { first_name: '', last_name: '', email: '', password: '', password_confirmation: '', photo: '' }
+const signUpInitialValues = {
+  first_name: '', last_name: '', email: '', password: '', password_confirmation: '', photo: '',
+}
 
 const SignUp = (props) => {
   const history = useHistory()
@@ -101,23 +103,21 @@ const SignUp = (props) => {
     formData.append('user[password]', values.password)
     formData.append('user[photo]', values.photo)
     axios.post('/users', formData)
-    .then((response) => {
-      props.loginHandler(response.headers.authorization)
-      setSubmitting(false)
-      history.push('/interests')
-    }).catch((error) => {
-      setSubmitting(false)
-    })
+      .then((response) => {
+        props.loginHandler(response.headers.authorization)
+        setSubmitting(false)
+        history.push('/interests')
+      }).catch(() => {
+        setSubmitting(false)
+      })
   }
 
   const onClick = () => {
     inputFile.current.click()
   }
 
-  const onPhotoChange = (setFieldValue) => {
-    return (event) => {
-      setFieldValue("photo", event.currentTarget.files[0])
-    }
+  const onPhotoChange = (setFieldValue) => (event) => {
+    setFieldValue('photo', event.currentTarget.files[0])
   }
 
   const signUpSchema = Yup.object().shape({
@@ -177,7 +177,14 @@ const SignUp = (props) => {
                   <Col xl={12}>
                     <UploadPhotoText onClick={onClick}>Upload photo</UploadPhotoText>
                   </Col>
-                  <input accept="image/*" type='file' name='photo' ref={inputFile} style={{display: 'none'}} onChange={onPhotoChange(setFieldValue)} />
+                  <input
+                    accept="image/*"
+                    type="file"
+                    name="photo"
+                    ref={inputFile}
+                    style={{ display: 'none' }}
+                    onChange={onPhotoChange(setFieldValue)}
+                  />
                   <Row>
                     <Col offset="s6">
                       <Field

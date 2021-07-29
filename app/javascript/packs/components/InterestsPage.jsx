@@ -71,14 +71,14 @@ const InterestsPage = (props) => {
 
   useEffect(() => {
     axios.get('/api/v1/interest_categories', { headers: { Authorization: props.userToken } })
-    .then((response) => {
-      setInterestCategories(response.data.interest_categories)
-    })
+      .then((response) => {
+        setInterestCategories(response.data.interest_categories)
+      })
 
     axios.get('/api/v1/interests', { headers: { Authorization: props.userToken } })
-    .then((response) => {
-      setUserInterests(response.data.interests)
-    })
+      .then((response) => {
+        setUserInterests(response.data.interests)
+      })
   }, [])
 
   useEffect(() => {
@@ -86,8 +86,8 @@ const InterestsPage = (props) => {
 
     const userInterestIdsByCategory = (interestCategoryId) => {
       const userInterestsIds = userInterests
-      .filter((userInterest) => userInterest.interest_category_id === interestCategoryId )
-      .map((userInterest) => userInterest.id.toString())
+        .filter((userInterest) => userInterest.interest_category_id === interestCategoryId)
+        .map((userInterest) => userInterest.id.toString())
 
       return userInterestsIds
     }
@@ -104,11 +104,15 @@ const InterestsPage = (props) => {
     setSubmitting(true)
     const interestsIds = Object.keys(values).reduce((acc, key) => [...acc, ...values[key]], [])
 
-    axios.patch('/api/v1/users/update_user_interests', { interest_ids: interestsIds }, { headers: { Authorization: props.userToken } })
-      .then((response) => {
+    axios.patch(
+      '/api/v1/users/update_user_interests',
+      { interest_ids: interestsIds },
+      { headers: { Authorization: props.userToken } },
+    )
+      .then(() => {
         setSubmitting(false)
         history.push('/users')
-      }).catch((error) => {
+      }).catch(() => {
         setSubmitting(false)
       })
   }

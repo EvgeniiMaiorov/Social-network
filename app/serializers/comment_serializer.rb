@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
 class CommentSerializer < ActiveModel::Serializer
-  attributes :id, :body, :post_id, :user_id
+  attributes :id, :body
+
+  belongs_to :user
+  belongs_to :post
 end

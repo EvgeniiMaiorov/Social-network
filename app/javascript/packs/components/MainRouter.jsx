@@ -4,26 +4,24 @@ import SignUp from './SignUp'
 import LogInPage from './LogInPage'
 import MainLayout from './MainLayout'
 
-const MainRouter = (props) => {
-  return (
-    <Router>
-        { props.userToken ? (
-          <MainLayout logoutHandler={props.logoutHandler} userToken={props.userToken} />
-        ) : (
-          <Switch>
-            <Route path="/sign-up">
-              <SignUp loginHandler={props.loginHandler} />
-            </Route>
-            <Route exact path="/">
-              <LogInPage loginHandler={props.loginHandler} />
-            </Route>
-            <Route>
-              <Redirect to="/" />
-            </Route>
-          </Switch>
-        )}
-    </Router>
-  )
-}
+const MainRouter = (props) => (
+  <Router>
+    { props.userToken ? (
+      <MainLayout logoutHandler={props.logoutHandler} userToken={props.userToken} />
+    ) : (
+      <Switch>
+        <Route path="/sign-up">
+          <SignUp loginHandler={props.loginHandler} />
+        </Route>
+        <Route exact path="/">
+          <LogInPage loginHandler={props.loginHandler} />
+        </Route>
+        <Route>
+          <Redirect to="/" />
+        </Route>
+      </Switch>
+    )}
+  </Router>
+)
 
 export default MainRouter

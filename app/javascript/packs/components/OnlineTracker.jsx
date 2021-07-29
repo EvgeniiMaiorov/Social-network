@@ -16,7 +16,7 @@ const OnlineTracker = (props) => {
   useEffect(() => {
     const getStatus = () => {
       axios.get(`/api/v1/users/${props.userId}/online_status`, { headers: { Authorization: props.userToken } })
-      .then((response) => setOnline(response.data))
+        .then((response) => setOnline(response.data))
     }
 
     getStatus()

@@ -57,15 +57,17 @@ const PendingFriendship = (props) => {
               className="circle responseve-img"
               src={invitation.user.photo.url || '/placeholder.png'}
             />
-            <Col xl={6}>
+            <Col xl={5}>
               <span className="title">
                 {`${invitation.user.first_name} ${invitation.user.last_name}`}
               </span>
               { invitation.user.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
             </Col>
           </Link>
-          <Col xl={6}>
+          <Col xl={3}>
             <Button onClick={makeFriend(invitation)}>Make a friend</Button>
+          </Col>
+          <Col xl={4}>
             <Button onClick={makeSubscriber(invitation)}>Make a subscriber</Button>
           </Col>
         </CollectionItem>

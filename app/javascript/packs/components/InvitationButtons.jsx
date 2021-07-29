@@ -24,6 +24,7 @@ const InvitationButtons = (props) => {
 
   const rejectInvitation = () => {
     let params
+
     if (props.user.invitation.user_id.toString() === props.userId) {
       params = { user_id: props.userId, friend_id: props.user.id }
     } else {
@@ -65,19 +66,23 @@ const InvitationButtons = (props) => {
     switch (props.user?.invitation?.status) {
       case 'pending':
         if (props.user.invitation.user_id.toString() === props.userId) {
-          return <InvitationButton onClick={deleteInvitation}>Delete</InvitationButton>
+          return <InvitationButton onClick={deleteInvitation}>Remove invitaion</InvitationButton>
         }
 
         return (
-          <>
-            <InvitationButton onClick={acceptInvitation}>Make a friend</InvitationButton>
-            <InvitationButton onClick={rejectInvitation}>Make a subscriber</InvitationButton>
-          </>
+          <Row>
+            <Col xl={6}>
+              <InvitationButton onClick={acceptInvitation}>Make a friend</InvitationButton>
+            </Col>
+            <Col xl={6}>
+              <InvitationButton onClick={rejectInvitation}>Make a subscriber</InvitationButton>
+            </Col>
+          </Row>
         )
 
       case 'rejected':
         if (props.user.invitation.user_id.toString() === props.userId) {
-          return <InvitationButton onClick={deleteInvitation}>Delete</InvitationButton>
+          return <InvitationButton onClick={deleteInvitation}>Remove invitaion</InvitationButton>
         }
 
         return <InvitationButton onClick={acceptInvitation}>Make a friend</InvitationButton>

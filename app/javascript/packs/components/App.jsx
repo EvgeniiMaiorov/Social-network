@@ -48,7 +48,7 @@ const App = () => {
       axios.patch(
         '/api/v1/users/location',
         { location: { latitude, longitude } },
-        { headers: { Authorization: userToken } }
+        { headers: { Authorization: userToken } },
       )
     })
 
@@ -57,7 +57,7 @@ const App = () => {
     }
   }, [userToken])
 
-  useEffect( () => {
+  useEffect(() => {
     const token = urlParams.get('token')
 
     if (token) loginHandler(token)
