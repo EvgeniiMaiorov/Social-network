@@ -21,12 +21,6 @@ const Disliked = styled.span`
   color: ${(props) => (props.disliked ? 'red' : 'black')};
 `
 
-const CommentEditInput = styled(TextInput)`
-  width: 100%;
-  text-indent: 30px;
-  height: 40px;
-`
-
 const UserPosts = (props) => {
   const [posts, setPosts] = useState([])
   const inputFile = useRef(null)

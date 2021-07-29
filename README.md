@@ -6,7 +6,7 @@ This project is part of the course iTechArt Students Lab. The goal of the projec
 Main features:
 * Autherization (including using Google)
 * Google map, on wich can be found friends, users with same (90% matching) and similare (more than 50% matching) interest
-* Posts with tags and comments
+* Posts with comments
 * Regular user and admin user roles
 * Friendship request and friendsips for users
 

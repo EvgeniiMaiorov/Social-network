@@ -10,7 +10,7 @@ module Api
 
         posts = posts.published if current_user.id != params[:user_id].to_i
 
-        render json: posts, current_user: current_user, include: [:tags, {comments: :user}]
+        render json: posts, current_user: current_user, include: [:tags, { comments: :user }]
       end
 
       def show
@@ -57,7 +57,7 @@ module Api
       end
 
       def find_post
-        @post = current_user.posts.find_by(id: params[:id])
+        @post = Post.find_by(id: params[:id])
 
         render json: { error: 'Post not found' }, status: :not_found unless @post
       end
