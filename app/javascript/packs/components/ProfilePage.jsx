@@ -17,21 +17,12 @@ const ProfileInfo = styled.div`
   border-radius: 24px;
 `
 
-const RecentActivites = styled.div`
-  position: absolute;
-  width: 650px;
-  height: 420px;
-  left: 1100px;
-  top: 133px;
-  background: #FFFFFF;
-  border-radius: 24px;
-`
 const MapWrapper = styled.div`
   position: absolute;
   width: 650px;
-  height: 345px;
+  height: 500px;
   left: 1100px;
-  top: 570px;
+  top: 133px;
   background: #FFFFFF;
   border-radius: 24px;
 `
@@ -99,9 +90,6 @@ const ProfilePage = (props) => {
         </ProfileInfo>
       </Col>
       <Col>
-        <Row>
-          <RecentActivites />
-        </Row>
         { !userId && (
           <Row>
             <MapWrapper>
