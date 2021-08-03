@@ -10,7 +10,11 @@ module Api
 
         posts = posts.published if current_user.id != params[:user_id].to_i
 
-        render json: posts, current_user: current_user, include: [:tags, { comments: :user }]
+        if params[:search].present?
+          posts = Post.search(params[:search], where: { user_id: params[:user_id].to_i, published: true })
+        end
+
+        render json: posts, current_user: current_user, include: [:tags, { comments: :user }], root: 'posts'
       end
 
       def show
