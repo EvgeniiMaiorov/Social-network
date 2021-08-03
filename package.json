@@ -23,6 +23,7 @@
     "react-tooltip": "^4.2.21",
     "styled-components": "^5.2.3",
     "turbolinks": "^5.2.0",
+    "use-debounce": "^7.0.0",
     "yup": "^0.32.9"
   },
   "version": "0.1.0",

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
 import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
+import { useDebouncedCallback } from 'use-debounce'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import Comments from './Comments'
@@ -23,6 +24,7 @@ const Disliked = styled.span`
 
 const UserPosts = (props) => {
   const [posts, setPosts] = useState([])
+  const [search, setSearch] = useState()
   const inputFile = useRef(null)
   const [delay, setDelay] = useState(false)
 
@@ -51,6 +53,23 @@ const UserPosts = (props) => {
         setPosts(response.data.posts)
       })
   }, [props.userId, props.userToken])
+
+  const setSearchDebounce = useDebouncedCallback(setSearch, 600)
+
+  const onChange = (e) => {
+    setSearchDebounce(e.target.value)
+  }
+
+  useEffect(() => {
+    axios.get(
+      `/api/v1/users/${props.userId}/posts`,
+      { params: { search },
+        headers: { Authorization: props.userToken } },
+    )
+      .then((response) => {
+        setPosts(response.data.posts)
+      })
+  }, [props.userId, props.userToken, search])
 
   const onSubmit = (values, { setSubmitting, resetForm }) => {
     setSubmitting(true)
@@ -192,6 +211,7 @@ const UserPosts = (props) => {
       )}
       <Row>
         <Col xl={12}>
+          <Textarea xl={12} onChange={onChange} label="Search post" />
           <Collection>
             {posts.map((post) => (
               <CollectionItem key={post.id} className="avatar">

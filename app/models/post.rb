@@ -12,5 +12,17 @@ class Post < ApplicationRecord
 
   mount_uploader :image, ImageUploader
 
+  searchkick match: :text_middle
+
+  def search_data
+    {
+      user_id: user_id,
+      title: title,
+      body: body,
+      tags: tags.map(&:name).join(' '),
+      published: published_at.present?
+    }
+  end
+
   validates :title, :body, presence: true
 end
