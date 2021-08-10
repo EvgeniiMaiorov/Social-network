@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  include Activities
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -23,6 +24,7 @@ class User < ApplicationRecord
   has_many :received_invitations,
            class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy, inverse_of: :friend
   has_many :likes, dependent: :destroy
+  has_many :activities, as: :activeble, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: { scope: :provider_identifier }
@@ -49,8 +51,8 @@ class User < ApplicationRecord
     received_invitations.includes(:user).pending.to_a
   end
 
-  def online?
-    online_since >= 3.minutes.ago
+  def online?(time = nil)
+    time || online_since >= 3.minutes.ago
   end
 
   def user_by_interest(percent)

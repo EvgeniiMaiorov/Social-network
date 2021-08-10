@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_23_205700) do
+ActiveRecord::Schema.define(version: 2021_08_04_162210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "intarray"
@@ -28,6 +28,17 @@ ActiveRecord::Schema.define(version: 2021_07_23_205700) do
     t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author_type_and_author_id"
     t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
     t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource_type_and_resource_id"
+  end
+
+  create_table "activities", force: :cascade do |t|
+    t.string "activity_type", null: false
+    t.bigint "user_id", null: false
+    t.string "activeble_type"
+    t.bigint "activeble_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["activeble_type", "activeble_id"], name: "index_activities_on_activeble_type_and_activeble_id"
+    t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
   create_table "admin_users", force: :cascade do |t|
