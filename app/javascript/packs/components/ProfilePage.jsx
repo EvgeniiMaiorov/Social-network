@@ -6,6 +6,7 @@ import axios from 'axios'
 import UserPosts from './UserPosts'
 import GoogleMap from './GoogleMap'
 import InvitationButtons from './InvitationButtons'
+import Activities from './Activities'
 
 const ProfileInfo = styled.div`
   position: absolute;
@@ -20,7 +21,17 @@ const ProfileInfo = styled.div`
 const MapWrapper = styled.div`
   position: absolute;
   width: 650px;
-  height: 500px;
+  height: 395px;
+  left: 1100px;
+  top: 520px;
+  background: #FFFFFF;
+  border-radius: 24px;
+`
+
+const ActivitiesWrapper = styled.div`
+  position: absolute;
+  width: 650px;
+  height: 370px;
   left: 1100px;
   top: 133px;
   background: #FFFFFF;
@@ -91,11 +102,18 @@ const ProfilePage = (props) => {
       </Col>
       <Col>
         { !userId && (
-          <Row>
-            <MapWrapper>
-              <GoogleMap userToken={props.userToken} user={user} />
-            </MapWrapper>
-          </Row>
+          <>
+            <Row>
+              <ActivitiesWrapper>
+                <Activities userId={userId} userToken={props.userToken}/>
+              </ActivitiesWrapper>
+            </Row>
+            <Row>
+              <MapWrapper>
+                <GoogleMap userToken={props.userToken} user={user} />
+              </MapWrapper>
+            </Row>
+          </>
         )}
       </Col>
     </Row>

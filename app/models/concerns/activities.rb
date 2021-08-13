@@ -10,7 +10,12 @@ module Activities
   end
 
   def create_common_activity
-    activities.create(activity_type: :"create_#{self.class.name.downcase}", user_id: user_id)
+    case self.class.name
+    when 'Post'
+      activities.create(activity_type: :create_post, user_id: user_id)
+    when 'Comment'
+      activities.create(activity_type: :create_comment, user_id: user_id)
+    end
   end
 
   def create_invitation_activity

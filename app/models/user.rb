@@ -24,6 +24,7 @@ class User < ApplicationRecord
   has_many :received_invitations,
            class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy, inverse_of: :friend
   has_many :likes, dependent: :destroy
+  has_many :activities, dependent: :destroy
   has_many :activities, as: :activeble, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
@@ -51,8 +52,8 @@ class User < ApplicationRecord
     received_invitations.includes(:user).pending.to_a
   end
 
-  def online?(time = nil)
-    time || online_since >= 3.minutes.ago
+  def online?(time = online_since)
+    time >= 3.minutes.ago
   end
 
   def user_by_interest(percent)

@@ -5,6 +5,9 @@ class PostSerializer < ActiveModel::Serializer
 
   has_many :comments
   has_many :tags
+  has_many :activities, as: :activeble
+
+  belongs_to :user
 
   attribute :like_count do
     object.likes.liked.count
