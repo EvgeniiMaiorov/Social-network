@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
       resources :interest_categories, only: [:index]
       get :interests, to: 'interests#index'
+      get :activities, to: 'activities#index'
 
       resources :invitations do
         member do
