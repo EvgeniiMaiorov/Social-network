@@ -1,13 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
-import { TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon } from 'react-materialize'
+import {
+  TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon, Chip,
+} from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import { useDebouncedCallback } from 'use-debounce'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import Comments from './Comments'
+import Tags from './Tags'
 
-const postCreateValues = { title: '', body: '', image: '', delay: null }
+const postCreateValues = { title: '', body: '', image: '', delay: null, tags: [] }
 
 const Unpublished = styled.span`
   color: grey;
@@ -78,7 +81,9 @@ const UserPosts = (props) => {
     formData.append('post[body]', values.body)
     formData.append('post[image]', values.image)
     if (values.delay) formData.append('delay', values.delay)
-    formData.append('tags[]', 'test')
+    values.tags.map((tag) => (
+      formData.append('tags[]', tag)
+    ))
     axios.post(`/api/v1/users/${props.userId}/posts`, formData, { headers: { Authorization: props.userToken } })
       .then((response) => {
         setSubmitting(false)
@@ -95,6 +100,18 @@ const UserPosts = (props) => {
 
   const onImageChange = (setFieldValue) => (event) => {
     setFieldValue('image', event.currentTarget.files[0])
+  }
+
+  const onTagsChange = (setFieldValue) => (event) => {
+    const newTags = []
+    for (let index = 0; index < event[0].children.length; index++) {
+      const elem = event[0].children.item(index)
+
+      if (elem.tagName === 'DIV') {
+        newTags.push(elem.firstChild.data.replace(/\s/g, '').toLowerCase())
+      }
+    }
+    setFieldValue('tags', newTags)
   }
 
   const postCreateSchema = Yup.object().shape({
@@ -145,6 +162,17 @@ const UserPosts = (props) => {
                       />
                     </Col>
                     <Col offset="s5" xl={6}>
+                      <Field
+                        name="tags"
+                        label="Title"
+                        as={Chip}
+                        options={{
+                          data: values.tags.map((tag) => ({ tag })),
+                          onChipAdd: onTagsChange(setFieldValue),
+                          onChipDelete: onTagsChange(setFieldValue),
+                          placeholder: 'Enter a tag',
+                        }}
+                      />
                       <Field
                         className={touched.title && errors.title ? 'invalid' : 'valid'}
                         error={errors.title}
@@ -222,6 +250,7 @@ const UserPosts = (props) => {
                     src={post.image.url}
                   />
                 )}
+                <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
                 <span className="title" style={{ fontWeight: 'bold' }}>
                   { post.title }
                 </span>
