@@ -3,6 +3,7 @@ import axios from 'axios'
 import {
   TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon, Chip,
 } from 'react-materialize'
+import { Link } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import { useDebouncedCallback } from 'use-debounce'
 import * as Yup from 'yup'
@@ -116,7 +117,8 @@ const UserPosts = (props) => {
 
   const postCreateSchema = Yup.object().shape({
     title: Yup.string()
-      .max(50, 'Name is too long!')
+      .max(65, 'Title is too long!')
+      .min(2, 'Title is too short!')
       .required('This field is required'),
     body: Yup.string()
       .required('This field is required'),
@@ -130,7 +132,7 @@ const UserPosts = (props) => {
 
   return (
     <>
-      { props.showForm && (
+      { props.showOnOwnPage && (
         <Row>
           <Col xl={12}>
             <Formik
@@ -250,17 +252,33 @@ const UserPosts = (props) => {
                     src={post.image.url}
                   />
                 )}
-                <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
-                <span className="title" style={{ fontWeight: 'bold' }}>
-                  { post.title }
-                </span>
-                <span>
-                  { !post.published_at && <Unpublished>(Unpublished)</Unpublished> }
-                </span>
-                <p>
-                  { post.body }
-                </p>
-                <Comments postId={post.id} userToken={props.userToken} comments={post.comments} />
+                <Row>
+                  <Col xl={8}>
+                    <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
+                  </Col>
+                  { props.showOnOwnPage && (
+                    <Col xl={4}>
+                      <Link to={`/posts/${post.id}/edit`}>Edit post</Link>
+                    </Col>
+                  )}
+                </Row>
+                <Col xl={12}>
+                  <span className="title" style={{ fontWeight: 'bold' }}>
+                    { post.title }
+                  </span>
+                  <span>
+                    { !post.published_at && <Unpublished>(Unpublished)</Unpublished> }
+                  </span>
+                  <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+                    { post.body }
+                  </p>
+                </Col>
+                <Comments
+                  postId={post.id}
+                  userToken={props.userToken}
+                  comments={post.comments}
+                  userId={props.currentUserId}
+                />
                 <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
                   thumb_up
                 </Icon>

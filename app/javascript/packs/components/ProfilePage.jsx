@@ -86,7 +86,7 @@ const ProfilePage = (props) => {
           </Col>
           <Col xl={8}>
             <NameWrapper>
-              {user.first_name} {user.last_name}
+              { `${user.first_name} ${user.last_name}` }
             </NameWrapper>
           </Col>
           { userId && userId !== props.userId && (
@@ -95,7 +95,12 @@ const ProfilePage = (props) => {
           <Row>
             <Col xl={12}>
               <hr />
-              <UserPosts userToken={props.userToken} userId={user.id} showForm={!userId} />
+              <UserPosts
+                userToken={props.userToken}
+                userId={user.id}
+                showOnOwnPage={!userId}
+                currentUserId={props.userId}
+              />
             </Col>
           </Row>
         </ProfileInfo>

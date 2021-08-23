@@ -3,18 +3,24 @@
 module Api
   module V1
     class PostsController < Api::V1::ApplicationController
-      before_action :find_post, only: %i[update destroy like]
+      before_action :find_post, only: %i[update destroy]
 
       def index
         posts = Post.where(user_id: params[:user_id]).includes(:tags, comments: :user).order(published_at: :desc)
-
         posts = posts.published if current_user.id != params[:user_id].to_i
 
         if params[:search].present?
           posts = Post.search(params[:search], where: { user_id: params[:user_id].to_i, published: true })
         end
 
-        render json: posts, current_user: current_user, include: [:tags, { comments: :user }], root: 'posts'
+        likes = Like.where(post_id: posts)
+        like_count = likes.group(:post_id, :status).count
+        user_post_likes = likes.where(user_id: current_user)
+
+        render(
+          json: posts, like_count: like_count, user_post_likes: user_post_likes, current_user: current_user,
+          include: [:tags, { comments: :user }], root: 'posts'
+        )
       end
 
       def show
@@ -44,11 +50,12 @@ module Api
       end
 
       def like
-        like = @post.likes.find_or_initialize_by(user_id: current_user.id)
+        post = Post.find_by(id: params[:id])
+        like = post.likes.find_or_initialize_by(user_id: current_user.id)
         like.status = params[:status]
 
         if like.save
-          render json: @post, current_user: current_user
+          render json: post, current_user: current_user
         else
           render json: { error: like.errors.messages }, status: :unprocessable_entity
         end
@@ -61,7 +68,7 @@ module Api
       end
 
       def find_post
-        @post = Post.find_by(id: params[:id])
+        @post = current_user.posts.find_by(id: params[:id])
 
         render json: { error: 'Post not found' }, status: :not_found unless @post
       end

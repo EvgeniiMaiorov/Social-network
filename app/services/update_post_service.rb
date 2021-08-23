@@ -10,7 +10,7 @@ class UpdatePostService
 
   def call
     post.published_at = Time.now.utc unless post.persisted? || params[:delay]
-    post.tags = tags_from_params
+    post.tags = tags_from_params if params[:tags]
 
     if post.save
       PublishPostWorker.perform_in(params[:delay].to_i.hours, post.id) if params[:delay]
