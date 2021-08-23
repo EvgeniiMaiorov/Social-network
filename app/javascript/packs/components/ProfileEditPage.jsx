@@ -169,6 +169,8 @@ const ProfileEditPage = (props) => {
                       alt=""
                       width="160"
                       height="160"
+                      onKeyDown={onClick}
+                      role="presentation"
                     />
                   </UploadPhoto>
                   <Col xl={12}>

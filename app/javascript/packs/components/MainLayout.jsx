@@ -8,6 +8,7 @@ import InterestsPage from './InterestsPage'
 import ProfilePage from './ProfilePage'
 import ProfileEditPage from './ProfileEditPage'
 import FriendPage from './FriendsPage'
+import PostEditPage from './PostEditPage'
 
 const LogoTitle = styled.div`
   display: flex;
@@ -97,6 +98,9 @@ const MainLayout = (props) => {
                 </Route>
                 <Route path="/users/:userId">
                   <ProfilePage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route path="/posts/:postId/edit">
+                  <PostEditPage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
                 <Route render={() => <Redirect to="/users" />} path="*" />
               </Switch>
