@@ -25,6 +25,8 @@ class User < ApplicationRecord
            class_name: 'Invitation', foreign_key: 'friend_id', dependent: :destroy, inverse_of: :friend
   has_many :likes, dependent: :destroy
   has_many :activities, as: :activeble, dependent: :destroy
+  has_and_belongs_to_many :conversations
+  has_many :messages, dependent: :destroy
 
   validates :first_name, :last_name, :email, presence: true
   validates :email, uniqueness: { scope: :provider_identifier }

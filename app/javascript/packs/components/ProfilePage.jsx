@@ -6,6 +6,7 @@ import axios from 'axios'
 import UserPosts from './UserPosts'
 import GoogleMap from './GoogleMap'
 import InvitationButtons from './InvitationButtons'
+import SendMessageButton from './SendMessageButton'
 
 const ProfileInfo = styled.div`
   position: absolute;
@@ -79,7 +80,10 @@ const ProfilePage = (props) => {
             </NameWrapper>
           </Col>
           { userId && userId !== props.userId && (
-            <InvitationButtons user={user} userId={props.userId} setUser={setUser} userToken={props.userToken} />
+            <>
+              <SendMessageButton userId={user.id} userToken={props.userToken} />
+              <InvitationButtons user={user} userId={props.userId} setUser={setUser} userToken={props.userToken} />
+            </>
           )}
           <Row>
             <Col xl={12}>

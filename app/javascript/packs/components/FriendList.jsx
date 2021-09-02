@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { CollectionItem, Col, Button } from 'react-materialize'
 import styled from 'styled-components'
+import SendMessageButton from './SendMessageButton'
 
 const Online = styled.div`
   color: green;
@@ -59,15 +60,18 @@ const FriendList = (props) => {
             className="circle responseve-img"
             src={friend.photo.url || '/placeholder.png'}
           />
-          <Col xl={6}>
+          <Col xl={4}>
             <span className="title">
               {`${friend.first_name} ${friend.last_name}`}
             </span>
             { friend.online ? <Online>Online</Online> : <Offline>Offline</Offline> }
           </Col>
         </Link>
-        <Col xl={6}>
+        <Col xl={4}>
           <Button onClick={makeSubscriber(invitation)}>Make a subscriber</Button>
+        </Col>
+        <Col xl={4}>
+          <SendMessageButton userId={friend.id} userToken={props.userToken} />
         </Col>
       </CollectionItem>
     )

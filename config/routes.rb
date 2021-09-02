@@ -3,6 +3,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
+
   authenticate :admin_user do
     mount Sidekiq::Web => '/sidekiq'
   end
@@ -43,6 +45,9 @@ Rails.application.routes.draw do
           patch :reject
         end
       end
+
+      resources :conversations, only: %i[index create show]
+      resources :messages, only: %i[index create]
     end
   end
   get '*path', to: 'pages#index', via: :all

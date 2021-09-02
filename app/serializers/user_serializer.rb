@@ -5,6 +5,7 @@ class UserSerializer < ActiveModel::Serializer
 
   has_many :interests
   has_many :comments
+  has_many :conversations
 
   attribute :online do
     object.online?
