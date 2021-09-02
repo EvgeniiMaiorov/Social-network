@@ -44,6 +44,8 @@ Rails.application.routes.draw do
           patch :reject
         end
       end
+
+      resources :tags, only: [:index]
     end
   end
   get '*path', to: 'pages#index', via: :all

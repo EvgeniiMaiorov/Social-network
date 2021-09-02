@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react'
 import axios from 'axios'
 import {
-  TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon, Chip,
+  TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon,
 } from 'react-materialize'
 import { Link } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import styled from 'styled-components'
 import Comments from './Comments'
 import Tags from './Tags'
+import TagsChip from './TagsChip'
 
 const postCreateValues = { title: '', body: '', image: '', delay: null, tags: [] }
 
@@ -103,18 +104,6 @@ const UserPosts = (props) => {
     setFieldValue('image', event.currentTarget.files[0])
   }
 
-  const onTagsChange = (setFieldValue) => (event) => {
-    const newTags = []
-    for (let index = 0; index < event[0].children.length; index++) {
-      const elem = event[0].children.item(index)
-
-      if (elem.tagName === 'DIV') {
-        newTags.push(elem.firstChild.data.replace(/\s/g, '').toLowerCase())
-      }
-    }
-    setFieldValue('tags', newTags)
-  }
-
   const postCreateSchema = Yup.object().shape({
     title: Yup.string()
       .max(65, 'Title is too long!')
@@ -164,17 +153,7 @@ const UserPosts = (props) => {
                       />
                     </Col>
                     <Col offset="s5" xl={6}>
-                      <Field
-                        name="tags"
-                        label="Title"
-                        as={Chip}
-                        options={{
-                          data: values.tags.map((tag) => ({ tag })),
-                          onChipAdd: onTagsChange(setFieldValue),
-                          onChipDelete: onTagsChange(setFieldValue),
-                          placeholder: 'Enter a tag',
-                        }}
-                      />
+                      <TagsChip userToken={props.userToken} setFieldValue={setFieldValue} tags={values.tags} />
                       <Field
                         className={touched.title && errors.title ? 'invalid' : 'valid'}
                         error={errors.title}
