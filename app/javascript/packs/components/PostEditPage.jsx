@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { TextInput, Button, Col, Row, Container, Chip } from 'react-materialize'
+import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import { useHistory, useParams } from 'react-router-dom'
 import axios from 'axios'
 import * as Yup from 'yup'
+import TagsChip from './TagsChip'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -139,18 +140,6 @@ const PostEditPage = (props) => {
     setFieldValue('image', event.currentTarget.files[0])
   }
 
-  const onTagsChange = (setFieldValue) => (event) => {
-    const newTags = []
-    for (let index = 0; index < event[0].children.length; index++) {
-      const elem = event[0].children.item(index)
-
-      if (elem.tagName === 'DIV') {
-        newTags.push(elem.firstChild.data.replace(/\s/g, '').toLowerCase())
-      }
-    }
-    setFieldValue('tags', newTags)
-  }
-
   const deletePost = () => {
     const result = window.confirm('Are you sure to delete?')
     if (result) {
@@ -189,81 +178,71 @@ const PostEditPage = (props) => {
               </Col>
             </Row>
             { !loading && (
-            <Formik
-              initialValues={postEditInitialValues(post)}
-              onSubmit={onSubmit}
-              validationSchema={postEditSchema}
-            >
-              {({ isSubmitting, errors, touched, setFieldValue, values }) => (
-                <Form>
-                  <UploadImage>
-                    <img
-                      className="circle responseve-img"
-                      onClick={onClick}
-                      src={values.image ? URL.createObjectURL(values.image) : post.image.url || '/placeholder.png'}
-                      alt=""
-                      width="160"
-                      height="160"
-                      onKeyDown={onClick}
-                      role="presentation"
+              <Formik
+                initialValues={postEditInitialValues(post)}
+                onSubmit={onSubmit}
+                validationSchema={postEditSchema}
+              >
+                {({ isSubmitting, errors, touched, setFieldValue, values }) => (
+                  <Form>
+                    <UploadImage>
+                      <img
+                        className="circle responseve-img"
+                        onClick={onClick}
+                        src={values.image ? URL.createObjectURL(values.image) : post.image.url || '/placeholder.png'}
+                        alt=""
+                        width="160"
+                        height="160"
+                        onKeyDown={onClick}
+                        role="presentation"
+                      />
+                    </UploadImage>
+                    <Col xl={12}>
+                      <EditImageText onClick={onClick}>Edit image</EditImageText>
+                    </Col>
+                    <input
+                      accept="image/*"
+                      type="file"
+                      name="photo"
+                      ref={inputFile}
+                      style={{ display: 'none' }}
+                      onChange={onImageChange(setFieldValue)}
                     />
-                  </UploadImage>
-                  <Col xl={12}>
-                    <EditImageText onClick={onClick}>Edit image</EditImageText>
-                  </Col>
-                  <input
-                    accept="image/*"
-                    type="file"
-                    name="photo"
-                    ref={inputFile}
-                    style={{ display: 'none' }}
-                    onChange={onImageChange(setFieldValue)}
-                  />
-                  <Row>
-                    <Col offset="s6">
-                      <Field
-                        name="tags"
-                        label="Title"
-                        as={Chip}
-                        options={{
-                          data: values.tags.map((tag) => ({ tag })),
-                          onChipAdd: onTagsChange(setFieldValue),
-                          onChipDelete: onTagsChange(setFieldValue),
-                          placeholder: 'Enter a tag',
-                        }}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col offset="s6">
-                      <Field
-                        className={touched.title && errors.title ? 'invalid' : 'valid'}
-                        error={errors.title}
-                        name="title"
-                        label="Title"
-                        as={PostEditInput}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col offset="s6">
-                      <Field
-                        className={touched.body && errors.body ? 'invalid' : 'valid'}
-                        error={errors.body}
-                        name="body"
-                        label="Body"
-                        as={PostEditInput}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col offset="s5">
-                      <PostUpdateButton type="submit" disabled={isSubmitting}>Update post</PostUpdateButton>
-                    </Col>
-                  </Row>
-                </Form>
-              )}
-            </Formik>
+                    <Row>
+                      <Col offset="s6">
+                        <TagsChip userToken={props.userToken} setFieldValue={setFieldValue} tags={values.tags} />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col offset="s6">
+                        <Field
+                          className={touched.title && errors.title ? 'invalid' : 'valid'}
+                          error={errors.title}
+                          name="title"
+                          label="Title"
+                          as={PostEditInput}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col offset="s6">
+                        <Field
+                          className={touched.body && errors.body ? 'invalid' : 'valid'}
+                          error={errors.body}
+                          name="body"
+                          label="Body"
+                          as={PostEditInput}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col offset="s5">
+                        <PostUpdateButton type="submit" disabled={isSubmitting}>Update post</PostUpdateButton>
+                      </Col>
+                    </Row>
+                  </Form>
+                )}
+              </Formik>
             )}
           </PostFormWrapper>
         </Col>
