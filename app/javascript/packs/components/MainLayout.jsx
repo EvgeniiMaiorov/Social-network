@@ -9,6 +9,8 @@ import ProfilePage from './ProfilePage'
 import ProfileEditPage from './ProfileEditPage'
 import FriendPage from './FriendsPage'
 import PostEditPage from './PostEditPage'
+import ConversationList from './ConversationList'
+import ConversationPage from './ConversationPage'
 
 const LogoTitle = styled.div`
   display: flex;
@@ -76,6 +78,9 @@ const MainLayout = (props) => {
               <Link to="/friends">Friends</Link>
             </Row>
             <Row>
+              <Link to="/conversations">Conversations</Link>
+            </Row>
+            <Row>
               <a href="#" onClick={logout}>Logout</a>
             </Row>
           </LinksWrapper>
@@ -101,6 +106,12 @@ const MainLayout = (props) => {
                 </Route>
                 <Route path="/posts/:postId/edit">
                   <PostEditPage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route exact path="/conversations/:conversationId">
+                  <ConversationPage userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route path="/conversations">
+                  <ConversationList userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
                 <Route render={() => <Redirect to="/users" />} path="*" />
               </Switch>

@@ -1,8 +1,10 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, } from 'react'
+import { ActionCableProvider } from '@thrash-industries/react-actioncable-provider'
 import { isExpired } from 'react-jwt'
 import { createGlobalStyle } from 'styled-components'
 import MainRouter from './MainRouter'
+import { API_WS_ROOT } from '../constants'
 
 const Global = createGlobalStyle`
 html, body {
@@ -65,8 +67,10 @@ const App = () => {
 
   return (
     <>
-      <Global />
-      <MainRouter loginHandler={loginHandler} userToken={userToken} logoutHandler={logoutHandler} />
+      <ActionCableProvider url={`${API_WS_ROOT}?authorization=${userToken}`}>
+        <Global />
+        <MainRouter loginHandler={loginHandler} userToken={userToken} logoutHandler={logoutHandler} />
+      </ActionCableProvider>
     </>
   )
 }

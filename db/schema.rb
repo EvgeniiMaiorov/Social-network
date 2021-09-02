@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_04_162210) do
+ActiveRecord::Schema.define(version: 2021_08_25_192748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "intarray"
@@ -63,6 +63,19 @@ ActiveRecord::Schema.define(version: 2021_08_04_162210) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
+  create_table "conversations", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "conversations_users", id: false, force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversations_users_on_conversation_id_and_user_id", unique: true
+    t.index ["conversation_id"], name: "index_conversations_users_on_conversation_id"
+    t.index ["user_id"], name: "index_conversations_users_on_user_id"
+  end
+
   create_table "interest_categories", force: :cascade do |t|
     t.string "category_name"
     t.datetime "created_at", precision: 6, null: false
@@ -101,6 +114,16 @@ ActiveRecord::Schema.define(version: 2021_08_04_162210) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["post_id"], name: "index_likes_on_post_id"
     t.index ["user_id"], name: "index_likes_on_user_id"
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.bigint "conversation_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
