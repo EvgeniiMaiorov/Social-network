@@ -5,6 +5,7 @@ import { isExpired } from 'react-jwt'
 import { createGlobalStyle } from 'styled-components'
 import MainRouter from './MainRouter'
 import { API_WS_ROOT } from '../constants'
+import '../translations/i18n'
 
 const Global = createGlobalStyle`
 html, body {
