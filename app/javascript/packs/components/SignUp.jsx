@@ -5,6 +5,8 @@ import { TextInput, Button, Col, Row, Container } from 'react-materialize'
 import { Formik, Form, Field } from 'formik'
 import axios from 'axios'
 import * as Yup from 'yup'
+import { useTranslation } from 'react-i18next'
+import SwitchLanguage from './SwitchLanguage'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -91,6 +93,7 @@ const signUpInitialValues = {
 
 const SignUp = (props) => {
   const history = useHistory()
+  const { t } = useTranslation()
 
   const inputFile = useRef(null)
 
@@ -122,24 +125,24 @@ const SignUp = (props) => {
 
   const signUpSchema = Yup.object().shape({
     first_name: Yup.string()
-      .matches(/^(?!admin\b)/i, 'Nice try!')
-      .min(2, 'Name is too short!')
-      .max(50, 'Name is too long!')
-      .required('This field is required'),
+      .matches(/^(?!admin\b)/i, t('admin'))
+      .min(2, t('short'))
+      .max(50, t('long'))
+      .required(t('required')),
     last_name: Yup.string()
-      .matches(/^(?!admin\b)/i, 'Nice try!')
-      .min(2, 'Last name is too short!')
-      .max(50, 'Last name is too long!')
-      .required('This field is required'),
-    email: Yup.string().email('Invalid email').required('This field is required'),
+      .matches(/^(?!admin\b)/i, t('admin'))
+      .min(2, t('short'))
+      .max(50, t('long'))
+      .required(t('required')),
+    email: Yup.string().email(t('error')).required(t('required')),
     password: Yup.string()
-      .min(6, 'Password must be min 6 characters long')
-      .required('This field is required'),
+      .min(6, t('password_length'))
+      .required(t('required')),
     password_confirmation: Yup.string().when('password', {
       is: (val) => (!!(val && val.length > 0)),
       then: Yup.string().oneOf(
         [Yup.ref('password')],
-        'Both password need to be the same',
+        t('password_check'),
       ),
     }),
   })
@@ -147,6 +150,7 @@ const SignUp = (props) => {
   return (
     <PageContainer>
       <Row>
+        <SwitchLanguage />
         <Col xl={7}>
           <ImageWrapper>
             <Image src="/amico.png" />
@@ -155,7 +159,7 @@ const SignUp = (props) => {
         <Col xl={6}>
           <LoginFormWrapper>
             <Row>
-              <Text>Create new account</Text>
+              <Text>{t('new_account')}</Text>
             </Row>
             <Formik
               initialValues={signUpInitialValues}
@@ -175,7 +179,7 @@ const SignUp = (props) => {
                     />
                   </UploadPhoto>
                   <Col xl={12}>
-                    <UploadPhotoText onClick={onClick}>Upload photo</UploadPhotoText>
+                    <UploadPhotoText onClick={onClick}>{t('upload_photo')}</UploadPhotoText>
                   </Col>
                   <input
                     accept="image/*"
@@ -191,7 +195,7 @@ const SignUp = (props) => {
                         className={touched.first_name && errors.first_name ? 'invalid' : 'valid'}
                         error={errors.first_name}
                         name="first_name"
-                        label="First name"
+                        label={t('first_name')}
                         as={SignUpInput}
                       />
                     </Col>
@@ -202,7 +206,7 @@ const SignUp = (props) => {
                         className={touched.last_name && errors.last_name ? 'invalid' : 'valid'}
                         error={errors.last_name}
                         name="last_name"
-                        label="Last name"
+                        label={t('last_name')}
                         as={SignUpInput}
                       />
                     </Col>
@@ -213,7 +217,7 @@ const SignUp = (props) => {
                         className={touched.email && errors.email ? 'invalid' : 'valid'}
                         error={errors.email}
                         name="email"
-                        label="Email"
+                        label={t('email')}
                         as={SignUpInput}
                       />
                     </Col>
@@ -224,7 +228,7 @@ const SignUp = (props) => {
                         className={touched.password && errors.password ? 'invalid' : 'valid'}
                         error={errors.password}
                         name="password"
-                        label="Password"
+                        label={t('password')}
                         as={SignUpInput}
                         password
                       />
@@ -236,7 +240,7 @@ const SignUp = (props) => {
                         className={touched.password_confirmation && errors.password_confirmation ? 'invalid' : 'valid'}
                         error={errors.password_confirmation}
                         name="password_confirmation"
-                        label="Password confirmation"
+                        label={t('confirmation')}
                         as={SignUpInput}
                         password
                       />
@@ -244,7 +248,7 @@ const SignUp = (props) => {
                   </Row>
                   <Row>
                     <Col offset="s5">
-                      <SigbUpButton type="submit" disabled={isSubmitting}>Create</SigbUpButton>
+                      <SigbUpButton type="submit" disabled={isSubmitting}>{t('create_account')}</SigbUpButton>
                     </Col>
                   </Row>
                 </Form>

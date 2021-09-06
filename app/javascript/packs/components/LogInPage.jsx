@@ -5,6 +5,8 @@ import { Formik, Form, Field } from 'formik'
 import { useHistory, Link } from 'react-router-dom'
 import GoogleLogin from 'react-google-login'
 import axios from 'axios'
+import { useTranslation } from 'react-i18next'
+import SwitchLanguage from './SwitchLanguage'
 
 const PageContainer = styled(Container)`
   width: 100%;
@@ -34,7 +36,7 @@ const Image = styled.img`
 const LogoTitle = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `
 
 const Text = styled.div`
@@ -68,7 +70,7 @@ const SignUpLink = styled.div`
   width: 100%;
   height: 14px;
   left: 290px;
-  top: 650px;
+  top: 690px;
   font-family: Roboto;
   font-style: normal;
   font-weight: normal;
@@ -92,6 +94,7 @@ const GoogleLoginWrapper = styled.div`
 
 const LogInPage = (props) => {
   const history = useHistory()
+  const { t } = useTranslation()
 
   const onSubmit = (values, { setSubmitting }) => {
     setSubmitting(true)
@@ -109,13 +112,13 @@ const LogInPage = (props) => {
     const errors = {}
 
     if (!values.email) {
-      errors.email = 'Required'
+      errors.email = t('required')
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = 'Invalid email address'
+      errors.email = t('error')
     }
 
     if (!values.password) {
-      errors.password = 'Required'
+      errors.password = t('required')
     }
 
     return errors
@@ -141,11 +144,12 @@ const LogInPage = (props) => {
   return (
     <PageContainer>
       <Row>
+        <SwitchLanguage />
         <Col xl={5}>
           <LoginFormWrapper>
             <LogoTitle>
               <img src="/logo.png" alt="" />
-              <Text>Welcom to LetsTalk!</Text>
+              <Text>{t('title')}</Text>
             </LogoTitle>
             <Formik
               initialValues={{ email: '', password: '' }}
@@ -158,7 +162,7 @@ const LogInPage = (props) => {
                     <Field
                       className={errors.email ? 'invalid' : 'valid'}
                       name="email"
-                      label="Email"
+                      label={t('email')}
                       error={errors.email}
                       as={LoginInput}
                       xl={12}
@@ -168,18 +172,18 @@ const LogInPage = (props) => {
                     <Field
                       className={errors.password ? 'invalid' : 'valid'}
                       name="password"
-                      label="Password"
+                      label={t('password')}
                       error={errors.password}
                       as={LoginInput}
                       xl={12}
                       password
                     />
                   </Row>
-                  <LoginButton type="submit" disabled={isSubmitting}>Log in</LoginButton>
+                  <LoginButton type="submit" disabled={isSubmitting}>{t('log_in')}</LoginButton>
                   <GoogleLoginWrapper>
                     <GoogleLogin
                       clientId="511856659895-k2d41bc5g4tejsc78vom8lla02rnlm0b.apps.googleusercontent.com"
-                      buttonText="Sign in with Google"
+                      buttonText={t('sign_in')}
                       onSuccess={responseGoogle}
                       onFailure={(response) => console.log('response >> ', response)}
                       prompt="select_account"
@@ -187,9 +191,9 @@ const LogInPage = (props) => {
                   </GoogleLoginWrapper>
                   <SignUpLink>
                     <Col xl={12}>
-                      Not a member?
+                      {t('member')}
                       {' '}
-                      <Link to="/sign-up">Sign up</Link>
+                      <Link to="/sign-up">{t('sign_up')}</Link>
                     </Col>
                   </SignUpLink>
                 </Form>
