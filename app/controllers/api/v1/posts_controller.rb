@@ -4,23 +4,26 @@ module Api
   module V1
     class PostsController < Api::V1::ApplicationController
       before_action :find_post, only: %i[update destroy]
+      before_action :find_friends, on: %i[feed index]
 
       def index
-        posts = Post.where(user_id: params[:user_id]).includes(:tags, comments: :user).order(published_at: :desc)
+        @friend_ids << current_user.id
+        posts =
+          Post.where(user_id: params[:user_id])
+              .includes(:tags, comments: :user).order(published_at: :desc)
         posts = posts.published if current_user.id != params[:user_id].to_i
+        posts = posts.visible unless @friend_ids.include? params[:user_id].to_i
 
         if params[:search].present?
-          posts = Post.search(params[:search], where: { user_id: params[:user_id].to_i, published: true })
+          if @friend_ids.include? params[:user_id]
+            posts = Post.search(params[:search], where: { user_id: params[:user_id].to_i, published: true })
+          else
+            posts =
+              Post.search(params[:search], where: { user_id: params[:user_id].to_i, published: true, visible: true })
+          end
         end
 
-        likes = Like.where(post_id: posts)
-        like_count = likes.group(:post_id, :status).count
-        user_post_likes = likes.where(user_id: current_user)
-
-        render(
-          json: posts, like_count: like_count, user_post_likes: user_post_likes, current_user: current_user,
-          include: [:tags, { comments: :user }], root: 'posts'
-        )
+        like_count(posts)
       end
 
       def show
@@ -61,6 +64,43 @@ module Api
         end
       end
 
+      def feed
+        posts =
+          if params[:search].present?
+            case params[:type]
+            when 'all'
+              @friend_ids << current_user.id
+              Post.search(
+                params[:search],
+                where: { _or: [{ published: true, visible: true }, { user_id: @friend_ids, published: true }] }
+              )
+            when 'friends_posts'
+              Post.search(params[:search], where: { user_id: @friend_ids, published: true })
+            else
+              render json: { error: 'Missing type param' }, status: :bad_request
+
+              return
+            end
+          else
+            case params[:type]
+            when 'all'
+              all_posts = []
+              public_posts = Post.all.published.visible
+              only_friends_posts = Post.where(user_id: @friend_ids).published
+              all_posts << public_posts << only_friends_posts
+              all_posts.flatten.uniq
+            when 'friends_posts'
+              Post.where(user_id: @friend_ids).published
+            else
+              render json: { error: 'Missing type param' }, status: :bad_request
+
+              return
+            end
+          end
+
+        like_count(posts)
+      end
+
       private
 
       def post_params
@@ -81,6 +121,22 @@ module Api
         else
           render json: { error: result.errors }, status: :unprocessable_entity
         end
+      end
+
+      def like_count(posts)
+        likes = Like.where(post_id: posts)
+        like_count = likes.group(:post_id, :status).count
+        user_post_likes = likes.where(user_id: current_user)
+
+        render(
+          json: posts, like_count: like_count, user_post_likes: user_post_likes, current_user: current_user,
+          include: [:tags, { comments: :user }, :user], root: 'posts'
+        )
+      end
+
+      def find_friends
+        friend_ids = current_user.friends.pluck(:user_id, :friend_id)
+        @friend_ids = friend_ids.flatten.delete_if { |x| x == current_user.id }
       end
     end
   end

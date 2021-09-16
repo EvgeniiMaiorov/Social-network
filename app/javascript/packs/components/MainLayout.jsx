@@ -11,6 +11,7 @@ import FriendPage from './FriendsPage'
 import PostEditPage from './PostEditPage'
 import ConversationList from './ConversationList'
 import ConversationPage from './ConversationPage'
+import PostsPage from './PostsPage'
 
 const LogoTitle = styled.div`
   display: flex;
@@ -75,6 +76,9 @@ const MainLayout = (props) => {
               <Link to="/interests">Interests</Link>
             </Row>
             <Row>
+              <Link to="/feed">Post feed</Link>
+            </Row>
+            <Row>
               <Link to="/friends">Friends</Link>
             </Row>
             <Row>
@@ -107,11 +111,14 @@ const MainLayout = (props) => {
                 <Route path="/posts/:postId/edit">
                   <PostEditPage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
-                <Route exact path="/conversations/:conversationId">
+                <Route path="/conversations/:conversationId">
                   <ConversationPage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
                 <Route path="/conversations">
                   <ConversationList userId={decodedToken.sub} userToken={props.userToken} />
+                </Route>
+                <Route path="/feed">
+                  <PostsPage userId={decodedToken.sub} userToken={props.userToken} />
                 </Route>
                 <Route render={() => <Redirect to="/users" />} path="*" />
               </Switch>

@@ -30,10 +30,14 @@ Rails.application.routes.draw do
         patch :online_since, on: :collection
         patch :location, on: :collection
         get :online_status, on: :collection
-        resources :posts, shallow: true, except: %i[new edit] do
-          post :like, on: :member
-          resources :comments, shallow: true
-        end
+        resources :posts, only: %i[index create]
+      end
+
+      resources :posts, only: %i[show update destroy] do
+        post :like, on: :member
+        get :feed, on: :collection
+        get :friends_posts, on: :collection
+        resources :comments, shallow: true
       end
 
       resources :interest_categories, only: [:index]

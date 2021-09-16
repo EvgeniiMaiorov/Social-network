@@ -38,7 +38,6 @@ module Api
         end
       end
 
-
       private
 
       def find_conversation
