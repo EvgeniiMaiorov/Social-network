@@ -7,6 +7,14 @@ class Tag < ApplicationRecord
 
   validates :name, format: { without: /(\s|[A-Z]+)/ }, presence: true
 
+  searchkick match: :text_middle
+
+  def search_data
+    {
+      name: name
+    }
+  end
+
   private
 
   def correct_name
