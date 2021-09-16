@@ -12,6 +12,7 @@ class Post < ApplicationRecord
   has_and_belongs_to_many :tags
 
   scope :published, -> { where.not(published_at: nil) }
+  scope :visible, -> { where(visibility: true) }
 
   mount_uploader :image, ImageUploader
 
@@ -23,7 +24,8 @@ class Post < ApplicationRecord
       title: title,
       body: body,
       tags: tags.map(&:name).join(' '),
-      published: published_at.present?
+      published: published_at.present?,
+      visible: visibility
     }
   end
 

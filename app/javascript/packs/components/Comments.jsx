@@ -44,41 +44,50 @@ const Comments = (props) => {
       .required('This field is required'),
   })
 
+  const getData = (comment) => (
+    new Date(comment.created_at).toLocaleString()
+  )
+
   return (
     <>
       <Row>
         <Col xl={12}>
           <Collection>
-            {comments.map((comment) => (
-              <CollectionItem key={comment.id} className="avatar">
-                <img
-                  className="circle"
-                  alt=""
-                  src={comment.user.photo?.url || '/placeholder.png'}
-                  width="80"
-                  height="80"
-                />
-                <Row>
-                  <Col xl={9}>
-                    <span>
-                      { `${comment.user.first_name} ${comment.user.last_name}` }
-                    </span>
-                  </Col>
-                  <Col xl={3}>
-                    { props.userId && props.userId === comment.user.id.toString() && (
-                      <CommentDeleteButton small onClick={deleteComment(comment.id)}>Delete</CommentDeleteButton>
-                    )}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col>
-                    <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
-                      { comment.body }
-                    </p>
-                  </Col>
-                </Row>
-              </CollectionItem>
-            ))}
+            {comments.map((comment) => {
+              const data = getData(comment)
+
+              return (
+                <CollectionItem key={comment.id} className="avatar">
+                  <img
+                    className="circle"
+                    alt=""
+                    src={comment.user.photo?.url || '/placeholder.png'}
+                    width="80"
+                    height="80"
+                  />
+                  <Row>
+                    <Col xl={9}>
+                      <span>
+                        { `${comment.user.first_name} ${comment.user.last_name}` }
+                      </span>
+                    </Col>
+                    <Col xl={3}>
+                      { props.userId && props.userId === comment.user.id.toString() && (
+                        <CommentDeleteButton small onClick={deleteComment(comment.id)}>Delete</CommentDeleteButton>
+                      )}
+                      { data }
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+                        { comment.body }
+                      </p>
+                    </Col>
+                  </Row>
+                </CollectionItem>
+              )
+            })}
           </Collection>
         </Col>
       </Row>

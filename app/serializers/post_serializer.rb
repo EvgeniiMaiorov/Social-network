@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class PostSerializer < ActiveModel::Serializer
-  attributes :id, :title, :body, :image, :published_at
+  attributes :id, :title, :body, :image, :published_at, :user_id
 
   has_many :comments
   has_many :tags
@@ -27,7 +27,7 @@ class PostSerializer < ActiveModel::Serializer
 
   attribute :like, if: -> { instance_options[:current_user] } do
     if instance_options[:user_post_likes]
-      instance_options[:user_post_likes].find{ |like| like.post_id == object.id }
+      instance_options[:user_post_likes].find { |like| like.post_id == object.id }
     else
       object.likes.find_by(user_id: instance_options[:current_user].id)
     end

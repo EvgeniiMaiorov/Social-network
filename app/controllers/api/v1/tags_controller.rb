@@ -6,7 +6,12 @@ module Api
       def index
         tags = Tag.all
 
-        render json: tags
+        if params[:search].present?
+          tags =
+            Tag.search(params[:search])
+        end
+
+        render json: tags, root: 'tags'
       end
     end
   end

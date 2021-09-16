@@ -13,7 +13,7 @@ import Comments from './Comments'
 import Tags from './Tags'
 import TagsChip from './TagsChip'
 
-const postCreateValues = { title: '', body: '', image: '', delay: null, tags: [] }
+const postCreateValues = { title: '', body: '', image: '', delay: null, tags: [], visibility: true }
 
 const Unpublished = styled.span`
   color: grey;
@@ -35,6 +35,7 @@ const UserPosts = (props) => {
   const [search, setSearch] = useState()
   const inputFile = useRef(null)
   const [delay, setDelay] = useState(false)
+  const [visibility, setVisibility] = useState(true)
 
   const saveLike = (post, status) => () => {
     axios.post(
@@ -49,6 +50,10 @@ const UserPosts = (props) => {
           ))
         ))
       })
+  }
+
+  const handleVisibilitySwitch = () => {
+    setVisibility(!visibility)
   }
 
   const handleDelaySwitch = () => {
@@ -96,6 +101,7 @@ const UserPosts = (props) => {
     formData.append('post[body]', values.body)
     formData.append('post[image]', values.image)
     if (values.delay) formData.append('delay', values.delay)
+    formData.append('visibility', visibility)
     values.tags.map((tag) => (
       formData.append('tags[]', tag)
     ))
@@ -209,6 +215,20 @@ const UserPosts = (props) => {
                               checked={delay}
                               onLabel="On"
                               onClick={handleDelaySwitch}
+                            />
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col>
+                            <span>Visibility</span>
+                          </Col>
+                          <Col>
+                            <Switch
+                              id="Switch-12"
+                              offLabel="Only for friends"
+                              checked={visibility}
+                              onLabel="Public"
+                              onClick={handleVisibilitySwitch}
                             />
                           </Col>
                         </Row>

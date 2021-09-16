@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Col, Row, Chip } from 'react-materialize'
 
 const Tags = (props) => {
-  const [tags] = useState(props.tags)
+  const {tags} = props
 
   return (
     <>
