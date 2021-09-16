@@ -6,6 +6,7 @@ import {
 import { Link } from 'react-router-dom'
 import { Formik, Form, Field } from 'formik'
 import { useDebouncedCallback } from 'use-debounce'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import Comments from './Comments'
@@ -27,8 +28,9 @@ const AllPosts = (props) => {
   const [search, setSearch] = useState()
   const inputFile = useRef(null)
   const [delay, setDelay] = useState(false)
-  const [loading, setLoading] = useState(true)
   const [type, setType] = useState('all')
+  const [page, setPage] = useState(1)
+  const [nextPage, setNextPage] = useState(true)
 
   const saveLike = (post, status) => () => {
     axios.post(
@@ -49,16 +51,18 @@ const AllPosts = (props) => {
     setDelay(!delay)
   }
 
-  useEffect(() => {
+  const getPosts = () => {
+    if (search) return
     axios.get('/api/v1/posts/feed', {
-      params: { type },
+      params: { type, page },
       headers: { Authorization: props.userToken },
     })
       .then((response) => {
-        setPosts(response.data.posts)
-        setLoading(false)
+        setPosts((prevPosts) => prevPosts.concat(response.data.posts))
+        setPage((page) => ++page)
+        setNextPage(!!response.data.meta.next_page)
       })
-  }, [props.userToken, type])
+  }
 
   const setSearchDebounce = useDebouncedCallback(setSearch, 600)
 
@@ -67,6 +71,7 @@ const AllPosts = (props) => {
   }
 
   useEffect(() => {
+    if (!search) return
     axios.get(
       '/api/v1/posts/feed',
       { params: { search, type },
@@ -111,6 +116,9 @@ const AllPosts = (props) => {
 
   const onParamsChange = (e) => {
     setType(e.target.value)
+    setPage(1)
+    setPosts([])
+    setNextPage(true)
   }
 
   const postCreateSchema = Yup.object().shape({
@@ -248,64 +256,71 @@ const AllPosts = (props) => {
       <Row>
         <Col xl={12}>
           <Textarea xl={12} onChange={onChange} label="Search post" />
-          { !loading && (
             <Collection>
-              {posts.map((post) => {
-                const data = getData(post)
+              { props.userId && (
+                <InfiniteScroll
+                  dataLength={posts.length}
+                  next={getPosts}
+                  hasMore={nextPage}
+                  loader={<h4>Loading...</h4>}
+                >
+                  {posts.map((post) => {
+                    const data = getData(post)
 
-                return (
-                  <CollectionItem key={post.id} className="avatar">
-                    { post.image.url && (
-                      <img
-                        alt=""
-                        className="circle responseve-img"
-                        src={post.image.url}
-                      />
-                    )}
-                    <Row>
-                      <Col xl={8}>
-                        <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
-                      </Col>
-                      { props.userId === post.user_id.toString() && (
-                        <Col xl={4}>
-                          <Link to={`/posts/${post.id}/edit`}>Edit post</Link>
+                    return (
+                      <CollectionItem key={post.id} className="avatar">
+                        { post.image.url && (
+                          <img
+                            alt=""
+                            className="circle responseve-img"
+                            src={post.image.url}
+                          />
+                        )}
+                        <Row>
+                          <Col xl={8}>
+                            <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
+                          </Col>
+                          { props.userId === post.user_id.toString() && (
+                            <Col xl={4}>
+                              <Link to={`/posts/${post.id}/edit`}>Edit post</Link>
+                            </Col>
+                          )}
+                        </Row>
+                        <Col xl={12}>
+                          <span className="title" style={{ fontWeight: 'bold' }}>
+                            { post.title }
+                          </span>
+                          <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+                            { post.body }
+                          </p>
                         </Col>
-                      )}
-                    </Row>
-                    <Col xl={12}>
-                      <span className="title" style={{ fontWeight: 'bold' }}>
-                        { post.title }
-                      </span>
-                      <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
-                        { post.body }
-                      </p>
-                    </Col>
-                    <Comments
-                      postId={post.id}
-                      userToken={props.userToken}
-                      comments={post.comments}
-                      userId={props.userId}
-                    />
-                    <Row>
-                      <Col xl={10}>
-                        <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
-                          thumb_up
-                        </Icon>
-                        <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
-                        <Icon style={{ color: 'red', cursor: 'pointer' }} tiny onClick={saveLike(post, 'dislike')}>
-                          thumb_down
-                        </Icon>
-                        <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
-                      </Col>
-                      <Col xl={2}>
-                        { data }
-                      </Col>
-                    </Row>
-                  </CollectionItem>
-                )
-              })}
+                        <Comments
+                          postId={post.id}
+                          userToken={props.userToken}
+                          comments={post.comments}
+                          userId={props.userId}
+                        />
+                        <Row>
+                          <Col xl={10}>
+                            <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
+                              thumb_up
+                            </Icon>
+                            <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
+                            <Icon style={{ color: 'red', cursor: 'pointer' }} tiny onClick={saveLike(post, 'dislike')}>
+                              thumb_down
+                            </Icon>
+                            <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
+                          </Col>
+                          <Col xl={2}>
+                            { data }
+                          </Col>
+                        </Row>
+                      </CollectionItem>
+                    )
+                  })}
+                </InfiniteScroll>
+              )}
             </Collection>
-          )}
         </Col>
       </Row>
     </>

@@ -84,13 +84,11 @@ module Api
           else
             case params[:type]
             when 'all'
-              all_posts = []
-              public_posts = Post.all.published.visible
-              only_friends_posts = Post.where(user_id: @friend_ids).published
-              all_posts << public_posts << only_friends_posts
-              all_posts.flatten.uniq
+              @friend_ids << current_user.id
+              posts = Post.all.published.page(params[:page]).per(10)
+              posts = posts.visible unless @friend_ids.include? params[:user_id].to_i
             when 'friends_posts'
-              Post.where(user_id: @friend_ids).published
+              Post.where(user_id: @friend_ids).published.page(params[:page]).per(10)
             else
               render json: { error: 'Missing type param' }, status: :bad_request
 
