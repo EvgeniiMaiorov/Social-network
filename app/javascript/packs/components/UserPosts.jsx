@@ -4,6 +4,7 @@ import {
   TextInput, Col, Row, Button, Textarea, Collection, CollectionItem, Switch, Icon,
 } from 'react-materialize'
 import { Link } from 'react-router-dom'
+import InfiniteScroll from 'react-infinite-scroll-component'
 import { Formik, Form, Field } from 'formik'
 import { useDebouncedCallback } from 'use-debounce'
 import * as Yup from 'yup'
@@ -29,6 +30,8 @@ const Disliked = styled.span`
 
 const UserPosts = (props) => {
   const [posts, setPosts] = useState([])
+  const [nextPage, setNextPage] = useState(true)
+  const [page, setPage] = useState(1)
   const [search, setSearch] = useState()
   const inputFile = useRef(null)
   const [delay, setDelay] = useState(false)
@@ -52,12 +55,20 @@ const UserPosts = (props) => {
     setDelay(!delay)
   }
 
-  useEffect(() => {
-    axios.get(`/api/v1/users/${props.userId}/posts`, { headers: { Authorization: props.userToken } })
-      .then((response) => {
-        setPosts(response.data.posts)
-      })
-  }, [props.userId, props.userToken])
+  const getPosts = () => {
+    if (search) return
+    console.log('props :>> ', props);
+    axios.get(
+      `/api/v1/users/${props.userId}/posts`,
+      { params: { page },
+        headers: { Authorization: props.userToken } },
+    ).then((response) => {
+      console.log('object :>> ', response);
+      setPosts((prevPosts) => prevPosts.concat(response.data.posts))
+      setPage((page) => ++page)
+      setNextPage(!!response.data.meta.next_page)
+    })
+  }
 
   const setSearchDebounce = useDebouncedCallback(setSearch, 600)
 
@@ -66,6 +77,7 @@ const UserPosts = (props) => {
   }
 
   useEffect(() => {
+    if (!search) return
     axios.get(
       `/api/v1/users/${props.userId}/posts`,
       { params: { search },
@@ -73,6 +85,7 @@ const UserPosts = (props) => {
     )
       .then((response) => {
         setPosts(response.data.posts)
+        setNextPage(!!response.data.meta.next_page)
       })
   }, [props.userId, props.userToken, search])
 
@@ -222,52 +235,61 @@ const UserPosts = (props) => {
         <Col xl={12}>
           <Textarea xl={12} onChange={onChange} label="Search post" />
           <Collection>
-            {posts.map((post) => (
-              <CollectionItem key={post.id} className="avatar">
-                { post.image.url && (
-                  <img
-                    alt=""
-                    className="circle responseve-img"
-                    src={post.image.url}
-                  />
-                )}
-                <Row>
-                  <Col xl={8}>
-                    <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
-                  </Col>
-                  { props.showOnOwnPage && (
-                    <Col xl={4}>
-                      <Link to={`/posts/${post.id}/edit`}>Edit post</Link>
+            { props.userId && (
+              <InfiniteScroll
+                dataLength={posts.length}
+                next={getPosts}
+                hasMore={nextPage}
+                loader={<h4>Loading...</h4>}
+              >
+                {posts.map((post) => (
+                  <CollectionItem key={post.id} className="avatar">
+                    { post.image.url && (
+                      <img
+                        alt=""
+                        className="circle responseve-img"
+                        src={post.image.url}
+                      />
+                    )}
+                    <Row>
+                      <Col xl={8}>
+                        <Tags postId={post.id} userToken={props.userToken} tags={post.tags} />
+                      </Col>
+                      { props.showOnOwnPage && (
+                        <Col xl={4}>
+                          <Link to={`/posts/${post.id}/edit`}>Edit post</Link>
+                        </Col>
+                      )}
+                    </Row>
+                    <Col xl={12}>
+                      <span className="title" style={{ fontWeight: 'bold' }}>
+                        { post.title }
+                      </span>
+                      <span>
+                        { !post.published_at && <Unpublished>(Unpublished)</Unpublished> }
+                      </span>
+                      <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
+                        { post.body }
+                      </p>
                     </Col>
-                  )}
-                </Row>
-                <Col xl={12}>
-                  <span className="title" style={{ fontWeight: 'bold' }}>
-                    { post.title }
-                  </span>
-                  <span>
-                    { !post.published_at && <Unpublished>(Unpublished)</Unpublished> }
-                  </span>
-                  <p style={{ wordWrap: 'break-word', wordBreak: 'break-all' }}>
-                    { post.body }
-                  </p>
-                </Col>
-                <Comments
-                  postId={post.id}
-                  userToken={props.userToken}
-                  comments={post.comments}
-                  userId={props.currentUserId}
-                />
-                <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
-                  thumb_up
-                </Icon>
-                <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
-                <Icon style={{ color: 'red', cursor: 'pointer' }} tiny onClick={saveLike(post, 'dislike')}>
-                  thumb_down
-                </Icon>
-                <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
-              </CollectionItem>
-            ))}
+                    <Comments
+                      postId={post.id}
+                      userToken={props.userToken}
+                      comments={post.comments}
+                      userId={props.currentUserId}
+                    />
+                    <Icon style={{ color: 'green', cursor: 'pointer' }} tiny onClick={saveLike(post, 'like')}>
+                      thumb_up
+                    </Icon>
+                    <Liked liked={post.like?.status === 'like'}>{post.like_count}</Liked>
+                    <Icon style={{ color: 'red', cursor: 'pointer' }} tiny onClick={saveLike(post, 'dislike')}>
+                      thumb_down
+                    </Icon>
+                    <Disliked disliked={post.like?.status === 'dislike'}>{post.dislike_count}</Disliked>
+                  </CollectionItem>
+                ))}
+              </InfiniteScroll>
+            )}
           </Collection>
         </Col>
       </Row>

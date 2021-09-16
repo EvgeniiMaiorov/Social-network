@@ -6,7 +6,7 @@ module Api
       before_action :find_post, only: %i[update destroy]
 
       def index
-        posts = Post.where(user_id: params[:user_id]).includes(:tags, comments: :user).order(published_at: :desc)
+        posts = Post.where(user_id: params[:user_id]).includes(:tags, comments: :user).order(published_at: :desc).page(params[:page]).per(10)
         posts = posts.published if current_user.id != params[:user_id].to_i
 
         if params[:search].present?
@@ -19,7 +19,7 @@ module Api
 
         render(
           json: posts, like_count: like_count, user_post_likes: user_post_likes, current_user: current_user,
-          include: [:tags, { comments: :user }], root: 'posts'
+          include: [:tags, { comments: :user }], meta: { total_pages: posts.total_pages, next_page: posts.next_page }, root: 'posts'
         )
       end
 

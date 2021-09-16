@@ -172,10 +172,11 @@ const SignUp = (props) => {
                     <img
                       className="circle responseve-img"
                       onClick={onClick}
-                      src={ values.photo ? URL.createObjectURL(values.photo) : '/placeholder.png' }
+                      src={values.photo ? URL.createObjectURL(values.photo) : '/placeholder.png'}
                       alt=""
                       width="160"
                       height="160"
+                      aria-hidden="true"
                     />
                   </UploadPhoto>
                   <Col xl={12}>
