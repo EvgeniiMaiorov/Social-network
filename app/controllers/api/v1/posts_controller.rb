@@ -130,7 +130,7 @@ module Api
 
         render(
           json: posts, like_count: like_count, user_post_likes: user_post_likes, current_user: current_user,
-          include: [:tags, { comments: :user }, :user], root: 'posts'
+          include: [:tags, { comments: :user }, :user], meta: { total_pages: posts.total_pages, next_page: posts.next_page }, root: 'posts'
         )
       end
 

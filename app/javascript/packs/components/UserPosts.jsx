@@ -62,13 +62,11 @@ const UserPosts = (props) => {
 
   const getPosts = () => {
     if (search) return
-    console.log('props :>> ', props);
     axios.get(
       `/api/v1/users/${props.userId}/posts`,
       { params: { page },
         headers: { Authorization: props.userToken } },
     ).then((response) => {
-      console.log('object :>> ', response);
       setPosts((prevPosts) => prevPosts.concat(response.data.posts))
       setPage((page) => ++page)
       setNextPage(!!response.data.meta.next_page)
