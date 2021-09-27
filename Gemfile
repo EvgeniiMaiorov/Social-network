@@ -24,12 +24,14 @@ gem 'webpacker', '~> 4.0'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'dotenv-rails', '~> 2.7', '>= 2.7.6'
   gem 'faker'
   gem 'pry-rails'
+  gem 'rails-controller-testing', '~> 1.0', '>= 1.0.5'
+  gem 'rspec-rails', '~> 5.0', '>= 5.0.2'
 end
 
 group :development do
-  gem 'dotenv-rails', '~> 2.7', '>= 2.7.6'
   gem 'letter_opener', '~> 1.7'
   gem 'listen', '~> 3.2'
   gem 'rubocop'
@@ -45,6 +47,7 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   gem 'webdrivers'
+  gem 'factory_bot_rails', '~> 6.2'
 end
 
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]

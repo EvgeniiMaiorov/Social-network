@@ -10,6 +10,9 @@ class UpdatePostService
 
   def call
     post.published_at = Time.now.utc unless post.persisted? || params[:delay]
+
+    binding.pry
+
     post.tags = tags_from_params if params[:tags]
     post.visibility = false if params[:visibility] == 'false'
 
